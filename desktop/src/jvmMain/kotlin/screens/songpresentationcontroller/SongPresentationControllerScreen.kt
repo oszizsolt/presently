@@ -2,16 +2,13 @@ package screens.songpresentationcontroller
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.onClick
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,13 +18,17 @@ import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.onHover
 import io.presently.service.presentation.PresentationMode
 import io.presently.service.presentation.song.SongPresentationService
+import screens.songpresentationcontroller.viewmodel.SongControllerViewModel
+import screens.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
+import screens.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalFoundationApi
 @Composable
 fun SongPresentationControllerScreen(
-    songPresentationService: SongPresentationService,
-    songPresentationControllerViewModel: SongPresentationControllerViewModel
+    songSlideControllerViewModel: SongSlideControllerViewModel,
+    songPresentationModeViewModel: SongPresentationModeViewModel,
+    songControllerViewModel: SongControllerViewModel
 ) {
     Row(
         Modifier
@@ -36,9 +37,9 @@ fun SongPresentationControllerScreen(
         Column(
             Modifier.width(120.dp)
         ) {
-            val songs by songPresentationService.songs().collectAsState(initial = emptyList())
+            val songs by songControllerViewModel.songs().collectAsState(initial = emptyList())
 
-            val selectedSongId by songPresentationControllerViewModel.songId.collectAsState(initial = null)
+            val selectedSongId by songControllerViewModel.songId.collectAsState(initial = null)
 
             songs.map { song ->
                 Row {
@@ -55,7 +56,7 @@ fun SongPresentationControllerScreen(
                                 }
                             )
                             .onClick {
-                                songPresentationControllerViewModel.setSong(song)
+                                songControllerViewModel.setSong(song)
                             }
                     )
                 }
@@ -65,13 +66,12 @@ fun SongPresentationControllerScreen(
             Modifier.weight(1.0f)
         ) {
 
-            val selectedSong by songPresentationControllerViewModel.song.collectAsState(initial = null)
-            val selectedSlide by songPresentationService.selectedSlide().collectAsState(initial = null)
-            val currentSlide by songPresentationService.currentSlide().collectAsState(initial = null)
-            val currentMode by songPresentationService.mode().collectAsState(initial = PresentationMode.Normal)
+            val selectedSong by songControllerViewModel.song.collectAsState(initial = null)
+            val selectedSlide by songSlideControllerViewModel.selected().collectAsState(initial = null)
+            val currentSlide by songSlideControllerViewModel.active().collectAsState(initial = null)
+            val currentMode by songPresentationModeViewModel.mode().collectAsState(initial = PresentationMode.Normal)
 
             selectedSong?.slides?.forEach { slide ->
-                var hover by remember { mutableStateOf(false) }
 
                 ListItem(
                     modifier = Modifier
@@ -83,52 +83,23 @@ fun SongPresentationControllerScreen(
                         else -> SelectedState.NotSelected
                         },
                     {
-                        songPresentationService.setSlide(slide.id)
+                        songSlideControllerViewModel.setSlide(slide.id)
                     },
                     "Primary",
                     "blue"
                 )
 
 
-
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .onHover {
-//                            hover = it
-//                        }
-//                        .background(
-//                            when {
-//                                currentMode == PresentationMode.Hidden && currentSlide?.id == slide.id -> Color.Blue.copy(red = 0.5f, green = 0.5f)
-//                                currentSlide?.id == slide.id -> Color.Blue
-//                                selectedSlide?.id == slide.id -> Color.Gray
-//                                hover -> Color.DarkGray
-//                                else -> Color.Transparent
-//                            }
-//                        )
-//                        .onClick {
-//                            songPresentationService.setSlide(slide.id)
-//                        }
-//                        .padding(vertical = 8.dp)
-//                ) {
-//                    Column {
-//                        slide.lines.forEach { line ->
-//                            Row {
-//                                Label(line)
-//                            }
-//                        }
-//                    }
-//
-//                }
+                }
             }
         }
         Column(
             Modifier
                 .width(256.dp)
         ) {
-            val currentSlide by songPresentationService.currentSlide().collectAsState(initial = null)
-            val nextSlides by songPresentationService.nextSlides(howMany = 2).collectAsState(initial = emptyList())
-            val currentMode by songPresentationService.mode().collectAsState(initial = PresentationMode.Normal)
+            val currentSlide by songSlideControllerViewModel.active().collectAsState(initial = null)
+//            val nextSlides by songSlideControllerViewModel.nextSlides(howMany = 2).collectAsState(initial = emptyList())
+            val currentMode by songPresentationModeViewModel.mode().collectAsState(initial = PresentationMode.Normal)
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -182,27 +153,6 @@ fun SongPresentationControllerScreen(
                                 }
                             }
                         }
-                    }
-
-                    nextSlides.forEach { slide ->
-                        Row(
-                            Modifier
-                                .padding(vertical = 2.dp)
-                        ) {
-                            Column {
-                                slide.lines.forEach { line ->
-                                    Row {
-                                        Label(
-                                            line,
-                                            fontSize = 9.sp,
-                                            color = Color.Gray,
-                                        )
-                                    }
-                                }
-                            }
-
-                        }
-
                     }
                 }
 
