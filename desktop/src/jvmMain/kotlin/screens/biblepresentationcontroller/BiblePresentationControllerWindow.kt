@@ -48,6 +48,7 @@ fun ApplicationScope.BiblePresentationControllerWindow(
 
                     true
                 }
+
                 (it.key == Key.F && it.type == KeyEventType.KeyUp) -> {
 
                     val newMode = if (presentationMode == PresentationMode.Frozen) {
@@ -60,6 +61,7 @@ fun ApplicationScope.BiblePresentationControllerWindow(
 
                     true
                 }
+
                 (it.key == Key.N && it.type == KeyEventType.KeyUp) -> {
                     biblePresentationModeViewModel.setMode(PresentationMode.Normal)
 
@@ -115,7 +117,10 @@ fun ApplicationScope.BiblePresentationControllerWindow(
             }
         }
     ) {
-
+        BiblePresentationScreen(
+            biblePresentationModeViewModel = biblePresentationModeViewModel,
+            bibleSlideViewModel = bibleSlideViewModel,
+        )
     }
 }
 
