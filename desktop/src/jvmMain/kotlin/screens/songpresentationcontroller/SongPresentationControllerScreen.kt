@@ -15,6 +15,8 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import components.list.listitem.ListItem
+import components.list.listitem.SelectedState
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.onHover
 import io.presently.service.presentation.PresentationMode
@@ -71,35 +73,53 @@ fun SongPresentationControllerScreen(
             selectedSong?.slides?.forEach { slide ->
                 var hover by remember { mutableStateOf(false) }
 
-                Row(
+                ListItem(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .onHover {
-                            hover = it
-                        }
-                        .background(
-                            when {
-                                currentMode == PresentationMode.Hidden && currentSlide?.id == slide.id -> Color.Blue.copy(red = 0.5f, green = 0.5f)
-                                currentSlide?.id == slide.id -> Color.Blue
-                                selectedSlide?.id == slide.id -> Color.Gray
-                                hover -> Color.DarkGray
-                                else -> Color.Transparent
-                            }
-                        )
-                        .onClick {
-                            songPresentationService.setSlide(slide.id)
-                        }
-                        .padding(vertical = 8.dp)
-                ) {
-                    Column {
-                        slide.lines.forEach { line ->
-                            Row {
-                                Label(line)
-                            }
-                        }
-                    }
+                        .fillMaxWidth(),
+                    selectedState = when{
+                        currentMode == PresentationMode.Hidden && currentSlide?.id == slide.id -> SelectedState.SecondarySelected
+                        currentSlide?.id == slide.id -> SelectedState.PrimarySelected
+                        selectedSlide?.id == slide.id -> SelectedState.TernarySelected
+                        else -> SelectedState.NotSelected
+                        },
+                    {
+                        songPresentationService.setSlide(slide.id)
+                    },
+                    "Primary",
+                    "blue"
+                )
 
-                }
+
+
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .onHover {
+//                            hover = it
+//                        }
+//                        .background(
+//                            when {
+//                                currentMode == PresentationMode.Hidden && currentSlide?.id == slide.id -> Color.Blue.copy(red = 0.5f, green = 0.5f)
+//                                currentSlide?.id == slide.id -> Color.Blue
+//                                selectedSlide?.id == slide.id -> Color.Gray
+//                                hover -> Color.DarkGray
+//                                else -> Color.Transparent
+//                            }
+//                        )
+//                        .onClick {
+//                            songPresentationService.setSlide(slide.id)
+//                        }
+//                        .padding(vertical = 8.dp)
+//                ) {
+//                    Column {
+//                        slide.lines.forEach { line ->
+//                            Row {
+//                                Label(line)
+//                            }
+//                        }
+//                    }
+//
+//                }
             }
         }
         Column(
