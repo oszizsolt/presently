@@ -1,4 +1,5 @@
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.window.application
 import io.presently.service.list.SongList
 import io.presently.service.presentation.song.SongPresentationServiceImplementation
@@ -6,8 +7,11 @@ import io.presently.service.song.Song
 import io.presently.service.song.SongSlide
 import io.presently.service.song.SongSlideType
 import kotlinx.datetime.Clock
-import screens.songpresentationcontroller.SongPresentationControllerViewModel
+import screens.songpresentationcontroller.viewmodel.SongControllerViewModel
 import screens.songpresentationcontroller.SongPresentationControllerWindow
+import screens.songpresentationcontroller.viewmodel.SongListControllerViewModel
+import screens.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
+import screens.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
 
 
 @ExperimentalFoundationApi
@@ -116,8 +120,25 @@ fun main() = application {
         )
     )
 
+
+    val coroutineScope = rememberCoroutineScope()
+
     SongPresentationControllerWindow(
-        songPresentationService = songPresentationService,
-        songPresentationControllerViewModel = SongPresentationControllerViewModel(),
+        songControllerViewModel = SongControllerViewModel(
+            coroutineScope = coroutineScope,
+            songPresentationService = songPresentationService,
+        ),
+        songSlideControllerViewModel = SongSlideControllerViewModel(
+            coroutineScope = coroutineScope,
+            songPresentationService = songPresentationService,
+        ),
+        songListControllerViewModel = SongListControllerViewModel(
+            coroutineScope = coroutineScope,
+            songPresentationService = songPresentationService,
+        ),
+        songPresentationModeViewModel = SongPresentationModeViewModel(
+            coroutineScope = coroutineScope,
+            songPresentationService = songPresentationService,
+        ),
     )
 }

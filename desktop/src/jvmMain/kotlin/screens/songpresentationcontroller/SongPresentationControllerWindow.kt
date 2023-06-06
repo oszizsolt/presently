@@ -18,17 +18,22 @@ import io.kanro.compose.jetbrains.expui.control.SegmentedButton
 import io.kanro.compose.jetbrains.expui.theme.DarkTheme
 import io.kanro.compose.jetbrains.expui.window.JBWindow
 import io.presently.service.presentation.PresentationMode
-import io.presently.service.presentation.song.SongPresentationService
+import screens.songpresentationcontroller.viewmodel.SongControllerViewModel
+import screens.songpresentationcontroller.viewmodel.SongListControllerViewModel
+import screens.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
+import screens.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalFoundationApi
 @Composable
 fun ApplicationScope.SongPresentationControllerWindow(
-    songPresentationService: SongPresentationService,
-    songPresentationControllerViewModel: SongPresentationControllerViewModel,
+    songSlideControllerViewModel: SongSlideControllerViewModel,
+    songPresentationModeViewModel: SongPresentationModeViewModel,
+    songControllerViewModel: SongControllerViewModel,
+    songListControllerViewModel: SongListControllerViewModel,
 ) {
-    val currentMode by songPresentationService.mode().collectAsState(initial = PresentationMode.Normal)
-    val title = songPresentationService.title()
+    val currentMode by songPresentationModeViewModel.mode().collectAsState(initial = PresentationMode.Normal)
+    val title = songListControllerViewModel.title()
 
     JBWindow(
         theme = DarkTheme,
@@ -43,10 +48,11 @@ fun ApplicationScope.SongPresentationControllerWindow(
                         PresentationMode.Hidden
                     }
 
-                    songPresentationService.setMode(newMode)
+                    songPresentationModeViewModel.setMode(newMode)
 
                     true
                 }
+
                 (it.key == Key.F && it.type == KeyEventType.KeyUp) -> {
 
                     val newMode = if (currentMode == PresentationMode.Frozen) {
@@ -55,26 +61,27 @@ fun ApplicationScope.SongPresentationControllerWindow(
                         PresentationMode.Frozen
                     }
 
-                    songPresentationService.setMode(newMode)
+                    songPresentationModeViewModel.setMode(newMode)
 
                     true
                 }
+
                 (it.key == Key.N && it.type == KeyEventType.KeyUp) -> {
-                    songPresentationService.setMode(PresentationMode.Normal)
+                    songPresentationModeViewModel.setMode(PresentationMode.Normal)
 
                     true
                 }
 
                 (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) -> {
 
-                    songPresentationService.skipSlides(delta = -1)
+                    songSlideControllerViewModel.jumpToPrevious()
 
                     true
                 }
 
                 (it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown) -> {
 
-                    songPresentationService.skipSlides(delta = 1)
+                    songSlideControllerViewModel.jumpToNext()
 
                     true
                 }
@@ -83,42 +90,44 @@ fun ApplicationScope.SongPresentationControllerWindow(
             }
         },
         mainToolBar = {
-                Row(
-                    Modifier
-                        .padding(end = 12.dp)
-                        .mainToolBarItem(Alignment.End)
-                ) {
-                    val presentationMode by songPresentationService.mode().collectAsState(initial = PresentationMode.Normal)
+            Row(
+                Modifier
+                    .padding(end = 12.dp)
+                    .mainToolBarItem(Alignment.End)
+            ) {
+                val presentationMode by songPresentationModeViewModel.mode()
+                    .collectAsState(initial = PresentationMode.Normal)
 
-                    val selectedIndex = when (presentationMode) {
-                        PresentationMode.Normal -> 0
-                        PresentationMode.Frozen -> 1
-                        PresentationMode.Hidden -> 2
+                val selectedIndex = when (presentationMode) {
+                    PresentationMode.Normal -> 0
+                    PresentationMode.Frozen -> 1
+                    PresentationMode.Hidden -> 2
+                }
+
+                SegmentedButton(3, selectedIndex, {
+                    val newMode = when (it) {
+                        0 -> PresentationMode.Normal
+                        1 -> PresentationMode.Frozen
+                        2 -> PresentationMode.Hidden
+                        else -> PresentationMode.Normal
                     }
 
-                    SegmentedButton(3, selectedIndex, {
-                        val newMode = when (it) {
-                            0 -> PresentationMode.Normal
-                            1 -> PresentationMode.Frozen
-                            2 -> PresentationMode.Hidden
-                            else -> PresentationMode.Normal
-                        }
-
-                        songPresentationService.setMode(newMode)
-                    }) {
-                        when (it) {
-                            0 -> Label("Normal")
-                            1 -> Label("Frozen")
-                            2 -> Label("Hidden")
-                            else -> Label("")
-                        }
+                    songPresentationModeViewModel.setMode(newMode)
+                }) {
+                    when (it) {
+                        0 -> Label("Normal")
+                        1 -> Label("Frozen")
+                        2 -> Label("Hidden")
+                        else -> Label("")
                     }
                 }
+            }
         }
     ) {
         SongPresentationControllerScreen(
-            songPresentationService = songPresentationService,
-            songPresentationControllerViewModel = songPresentationControllerViewModel,
+            songSlideControllerViewModel = songSlideControllerViewModel,
+            songPresentationModeViewModel = songPresentationModeViewModel,
+            songControllerViewModel = songControllerViewModel,
         )
     }
 }
