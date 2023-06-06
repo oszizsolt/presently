@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class BibleBook(
     val id: String,
     val name: String,
-    val chapter: List<BibleChapter>,
+    val chapters: List<BibleChapter>,
 )

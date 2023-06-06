@@ -6,6 +6,6 @@ interface BibleService {
 
     fun get(translationId: String): Flow<List<BibleBook>>
 
-    fun getTranslations(): Flow<List<BibleTranslation>>
+    fun translations(): Flow<List<BibleTranslation>>
 
 }
