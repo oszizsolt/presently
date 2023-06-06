@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SongPresentationService {
 
-    fun currentSlide(): Flow<SongSlide?>
+    fun activeSlide(): Flow<SongSlide?>
 
     fun selectedSlide(): Flow<SongSlide?>
 
@@ -21,10 +21,7 @@ interface SongPresentationService {
     fun currentSong(): Flow<Song?>
 
 
-
     fun setSlide(slideId: String?)
-
-    fun skipSlides(delta: Int)
 
     fun setMode(mode: PresentationMode)
     fun mode(): Flow<PresentationMode>

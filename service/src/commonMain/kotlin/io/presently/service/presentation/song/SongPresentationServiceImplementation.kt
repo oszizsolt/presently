@@ -35,7 +35,7 @@ class SongPresentationServiceImplementation(
         slidesByIds[selectedSlideId]
     }
 
-    override fun currentSlide(): Flow<SongSlide?> {
+    override fun activeSlide(): Flow<SongSlide?> {
         return currentSlide
     }
 
@@ -79,36 +79,6 @@ class SongPresentationServiceImplementation(
         if (this.mode.value != PresentationMode.Frozen) {
             currentSlideId.value = slideId
         }
-    }
-
-    override fun skipSlides(delta: Int) {
-        if (delta == 0) {
-            return
-        }
-
-        if (slides.isEmpty()) {
-            return
-        }
-
-        val currentSlideIndex = slides.indexOfFirst { it.id == selectedSlideId.value }
-
-        if (currentSlideIndex < 0) {
-            return
-        }
-
-        var slideIndexToSkipTo = currentSlideIndex + delta
-
-        if (slideIndexToSkipTo < 0) {
-            slideIndexToSkipTo = 0
-        }
-
-        if (slideIndexToSkipTo >= slides.size) {
-            slideIndexToSkipTo = slides.size - 1
-        }
-
-        val slideIdToSkipTo = slides[slideIndexToSkipTo].id
-
-        setSlide(slideIdToSkipTo)
     }
 
     override fun setMode(mode: PresentationMode) {
