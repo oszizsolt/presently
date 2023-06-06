@@ -13,10 +13,6 @@ import androidx.compose.ui.unit.dp
 import common.preview.PreviewContainer
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.onHover
-import io.kanro.compose.jetbrains.expui.style.LocalAreaColors
-import io.kanro.compose.jetbrains.expui.theme.DarkTheme
-import io.kanro.compose.jetbrains.expui.theme.Theme
-import io.kanro.compose.jetbrains.expui.window.JBWindow
 
 enum class SelectedState {
     NotSelected,
@@ -72,7 +68,7 @@ fun ListItem(
         .onClick{
             onClick()
         }
-        .padding(vertical = 8.dp, horizontal = 16.dp)
+        .padding(vertical = 4.dp, horizontal = 16.dp)
     ){
         content()
     }
@@ -87,5 +83,4 @@ fun ListItem_Prev() {
             Label("Alma")
         }
     }
-
 }
