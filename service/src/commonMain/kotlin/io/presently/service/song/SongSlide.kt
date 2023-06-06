@@ -9,4 +9,5 @@ data class SongSlide(
     val lines: List<String>,
     val type: SongSlideType,
     val groupId: String,
+    val songId: String,
 )

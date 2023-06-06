@@ -20,8 +20,18 @@ kotlin {
     sourceSets {
         val jvmMain by getting {
             dependencies {
+                implementation(project(":service"))
                 implementation(project(":common"))
-                implementation(compose.desktop.currentOs)
+
+                implementation(compose.desktop.currentOs) {
+                    exclude("org.jetbrains.compose.material")
+                }
+
+                implementation("com.bybutter.compose:compose-jetbrains-expui-theme:2.0.0")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
             }
         }
         val jvmTest by getting

@@ -13,7 +13,7 @@ interface SongPresentationService {
     fun selectedSlide(): Flow<SongSlide?>
 
 
-    fun nextSlides(): Flow<List<SongSlide>>
+    fun nextSlides(howMany: Int): Flow<List<SongSlide>>
 
 
     fun songs(): Flow<List<Song>>
@@ -22,8 +22,13 @@ interface SongPresentationService {
 
 
 
-    fun setSlide(slide: SongSlide?)
+    fun setSlide(slideId: String?)
+
+    fun skipSlides(delta: Int)
 
     fun setMode(mode: PresentationMode)
+    fun mode(): Flow<PresentationMode>
+
+    fun title(): String
 
 }

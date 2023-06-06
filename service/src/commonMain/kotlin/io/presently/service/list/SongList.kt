@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SongList(
+    val id: String,
     val title: String,
     val createdAt: Instant,
     val songs: List<Song>,

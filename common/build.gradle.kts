@@ -18,6 +18,8 @@ kotlin {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material)
+
+                implementation(project(":service"))
             }
         }
         val commonTest by getting {
