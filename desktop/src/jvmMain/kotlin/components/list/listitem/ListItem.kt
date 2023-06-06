@@ -19,7 +19,7 @@ fun ListItem(
     selectedState: SelectedState = SelectedState.NotSelected,
     onClick: () -> Unit = {},
     title: String,
-    subtitle: String?
+    subtitle: String? = null,
 ) {
     ListItem(
         selectedState = selectedState,
