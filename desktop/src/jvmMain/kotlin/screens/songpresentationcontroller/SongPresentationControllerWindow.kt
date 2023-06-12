@@ -13,6 +13,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
+import components.panel.PanelLayout
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.SegmentedButton
 import io.kanro.compose.jetbrains.expui.theme.DarkTheme
@@ -124,10 +125,14 @@ fun ApplicationScope.SongPresentationControllerWindow(
             }
         }
     ) {
-        SongPresentationControllerScreen(
-            songSlideControllerViewModel = songSlideControllerViewModel,
-            songPresentationModeViewModel = songPresentationModeViewModel,
-            songControllerViewModel = songControllerViewModel,
-        )
+        PanelLayout(
+            modifier = Modifier
+        ) {
+            SongPresentationControllerScreen(
+                songSlideControllerViewModel = songSlideControllerViewModel,
+                songPresentationModeViewModel = songPresentationModeViewModel,
+                songControllerViewModel = songControllerViewModel,
+            )
+        }
     }
 }
