@@ -1,8 +1,13 @@
 package screens.songpresentationcontroller
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -13,6 +18,8 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
+import components.panel.PanelItem
+import components.panel.PanelItemData
 import components.panel.PanelLayout
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.SegmentedButton
@@ -23,6 +30,7 @@ import screens.songpresentationcontroller.viewmodel.SongControllerViewModel
 import screens.songpresentationcontroller.viewmodel.SongListControllerViewModel
 import screens.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
 import screens.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
+import java.awt.Color
 
 @OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalFoundationApi
@@ -125,8 +133,44 @@ fun ApplicationScope.SongPresentationControllerWindow(
             }
         }
     ) {
+        val panelList = mutableListOf<PanelItemData>()
+        val panel1 = PanelItemData(
+            iconResource = "icons/bars-solid.svg",
+            panelName ="Panel 1"
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(androidx.compose.ui.graphics.Color.Blue)
+                    .fillMaxSize()
+            ){
+                Label(
+                    modifier = Modifier
+                        .background(androidx.compose.ui.graphics.Color.DarkGray),
+                    text = "This is Panel 1\ncontent"
+                )
+            }
+        }
+        val panel2 = PanelItemData(
+            iconResource = "icons/bars-solid.svg",
+            panelName ="Panel 2"
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(androidx.compose.ui.graphics.Color.Yellow)
+            ){
+                Label(
+                    modifier = Modifier
+                        .background(androidx.compose.ui.graphics.Color.DarkGray),
+                    text = "This is Panel 2\ncontent"
+                )
+            }
+        }
+        panelList.add(panel1)
+        panelList.add(panel2)
         PanelLayout(
-            modifier = Modifier
+            modifier = Modifier,
+            panelList = panelList
         ) {
             SongPresentationControllerScreen(
                 songSlideControllerViewModel = songSlideControllerViewModel,
