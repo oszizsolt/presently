@@ -32,13 +32,13 @@ fun PanelLayout(
     mainPanelContent: @Composable () -> Unit
 ) {
     var leftPanelSelectedItem: Int? by remember { mutableStateOf(null) }
-    val position = remember { mutableStateOf(Offset(0f,0f)) }
+    val position = remember { mutableStateOf(Offset(0f, 0f)) }
+    val dragExitOnLeft = remember { mutableStateOf(false) }
+    val dragExitOnRight = remember { mutableStateOf(false) }
 
     Row(modifier = modifier
         .onPointerEvent(PointerEventType.Move) {
             position.value = it.changes.first().position
-//                                println("pointer x: ${position.value.x.toInt()},pointer x: ${position.value.y.toInt()}")
-//                                color = Color(position.x.toInt() % 256, position.y.toInt() % 256, 0)
         }
     ) {
         // 1. Left side panel (narrow)
@@ -98,157 +98,107 @@ fun PanelLayout(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    val bounds = remember { mutableStateOf(Rect(Offset(0f,0f),Offset(0f,0f))) }
+                    val bounds = remember { mutableStateOf(Rect(Offset(0f, 0f), Offset(0f, 0f))) }
                     val minWidth = with(LocalDensity.current) { 40.dp.toPx() }
                     val maxWidth = with(LocalDensity.current) { 300.dp.toPx() }
-                    val startPosition = remember { mutableStateOf(Offset(0f,0f)) }
+                    val startPosition = remember { mutableStateOf(Offset(0f, 0f)) }
                     Box(
                         modifier = Modifier
-//                            .onGloballyPositioned {
-//                                bounds.value = it.boundsInRoot()
-//                            }
                             .fillMaxSize()
                     ) {
                         if (leftPanelSelectedItem != null) {
                             panelList[leftPanelSelectedItem!!].content()
                         }
-//                        when (leftPanelSelectedItem) {
-//                            0 -> {
-//                                //TODO: Call the Composable function of the corresponding panel from here
-//                                Label(
-//                                    modifier = Modifier
-//                                        .background(color = Color.DarkGray),
-//                                    text = "Panel 1"
-//                                )
-//                                panelColor = Color.Blue
-//                            }
-//
-//                            1 -> {
-//                                //TODO: Call the Composable function of the corresponding panel from here
-//                                Label(
-//                                    modifier = Modifier
-//                                        .background(color = Color.DarkGray),
-//                                    text = "Panel 2"
-//                                )
-//                                panelColor = Color.Cyan
-//                            }
-//
-//                            2 -> {
-//                                //TODO: Call the Composable function of the corresponding panel from here
-//                                Label(
-//                                    modifier = Modifier
-//                                        .background(color = Color.DarkGray),
-//                                    text = "Panel 3"
-//                                )
-//                                panelColor = Color.Yellow
-//                            }
-//
-//                            null -> {
-//
-//                            }
-//                        }
-                    }
-
-
-
-                    Box(
-                        modifier = Modifier
-                            .onGloballyPositioned {
-                                bounds.value = it.boundsInRoot()
-                            }
-                            .background(Color.Magenta)
-                            .align(Alignment.TopEnd)
-                            .width(16.dp)
-                            .fillMaxHeight()
-                            .pointerHoverIcon(PointerIcon(org.jetbrains.skiko.Cursor(java.awt.Cursor.W_RESIZE_CURSOR)))
-                            .onDrag(
-                                onDragStart = {
-                                    startPosition.value = position.value
-                                    println("OnDrag Start: ${startPosition.value.x}")
-                                          },
-                                onDragEnd = {
-                                    println("OnDrag End")
-                                },
-//                                enabled = isDragEnabled.value,
-                            ) {
-                                println("pointer x: ${position.value.x}, bounds left: ${bounds.value.left}, bounds right: ${bounds.value.right}, isDragOn: ${isDragEnabled.value}")
-//                                println("leftPanel x: $leftPanelWidth}, bounds right: ${bounds.value.right}, maxWidth: $maxWidth")
-//                                if (bounds.value.right < maxWidth){
-//                                if (position.value.x.toInt() + startPosition.value.x < maxWidth){
-                                if (position.value.x <= bounds.value.right && position.value.x >= bounds.value.left){
-                                    isDragEnabled.value = true
+                        Box(
+                            modifier = Modifier
+                                .onGloballyPositioned {
+                                    bounds.value = it.boundsInRoot()
                                 }
+                                .background(Color.Magenta)
+                                .align(Alignment.TopEnd)
+                                .width(16.dp)
+                                .fillMaxHeight()
+                                .pointerHoverIcon(PointerIcon(org.jetbrains.skiko.Cursor(java.awt.Cursor.W_RESIZE_CURSOR)))
+                                .onDrag {
+                                    if (position.value.x <= bounds.value.right && position.value.x >= bounds.value.left) {
+                                        isDragEnabled.value = true
+                                    }
 
-                                // If extra quick movement bug causes the cursor to slip, enable the dragging so the panel can catch up.
-//                                if (position.value.x > maxWidth && !isDragEnabled.value){
-//                                    isDragEnabled.value = true
-//                                }
+                                    if (position.value.x < bounds.value.left) {
+                                        dragExitOnLeft.value = true
+                                    }
 
-                                if (isDragEnabled.value){
-                                    leftPanelWidth = (leftPanelWidth + it.x)
-                                        .coerceAtLeast(minWidth)
-                                        .coerceAtMost(maxWidth)
+                                    if (position.value.x > bounds.value.right) {
+                                        dragExitOnRight.value = true
+                                    }
 
-                                    if (leftPanelWidth >= maxWidth || leftPanelWidth <= minWidth){
-                                        isDragEnabled.value = false
+                                    if (dragExitOnRight.value && position.value.x < bounds.value.right) {
+                                        isDragEnabled.value = true
+                                        println("Fix after right slip")
+                                    }
+
+                                    if (dragExitOnLeft.value && position.value.x > bounds.value.left) {
+                                        isDragEnabled.value = true
+                                        println("Fix after left slip")
+                                    }
+                                    if (isDragEnabled.value) {
+                                        dragExitOnRight.value = false
+                                        dragExitOnLeft.value = false
+                                        leftPanelWidth = (leftPanelWidth + it.x)
+                                            .coerceAtLeast(minWidth)
+                                            .coerceAtMost(maxWidth)
+
+                                        if (leftPanelWidth >= maxWidth || leftPanelWidth <= minWidth) {
+                                            isDragEnabled.value = false
+                                        }
                                     }
                                 }
-                            }
-//                            .onPointerEvent(PointerEventType.Enter) { isDragEnabled.value = true }
-//                            .onPointerEvent(PointerEventType.Exit) { isDragEnabled.value = false }
-//                            .pointerInput(Unit) {
-//                                detectDragGestures(
-//                                    matcher = PointerMatcher.Primary
-//                                ) {
-//                                    leftPanelWidth = (leftPanelWidth + it.x)
-//                                        .coerceAtMost(maxHeight)
-//                                }
-//                            }
 
-                    ) {
-                        Popup(offset = IntOffset(40,0)) {
-                            // Draw a rectangle shape with rounded corners inside the popup
-                            Box(
-                                modifier = Modifier
-                                    .background(Color.DarkGray)
-                                    .border(1.dp, Color.LightGray)
-                                    .padding(7.dp)
-                            ) {
+                        ) {
+                            Popup(offset = IntOffset(40, 0)) {
+                                // Draw a rectangle shape with rounded corners inside the popup
+                                Box(
+                                    modifier = Modifier
+                                        .background(Color.DarkGray)
+                                        .border(1.dp, Color.LightGray)
+                                        .padding(7.dp)
+                                ) {
 
-                                Text(
-                                    text = "Bounds left: ${bounds.value.left}\n" +
-                                            "Bounds right: ${bounds.value.right}\n" +
-                                            "Start Pos: ${startPosition.value.x}\n" +
-                                            "leftPanelW: $leftPanelWidth\n" +
-                                            "isDragOn: ${isDragEnabled.value}\n" +
-                                            "Pointer X: ${position.value.x}",
-                                    color = Color.Green
-                                )
+                                    Text(
+                                        text = "Bounds left: ${bounds.value.left}\n" +
+                                                "Bounds right: ${bounds.value.right}\n" +
+                                                "Start Pos: ${startPosition.value.x}\n" +
+                                                "leftPanelW: $leftPanelWidth\n" +
+                                                "isDragOn: ${isDragEnabled.value}\n" +
+                                                "Pointer X: ${position.value.x}",
+                                        color = Color.Green
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        // 3. Main panel
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1F)
-        ) {
-            mainPanelContent()
+            // 3. Main panel
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1F)
+            ) {
+                mainPanelContent()
+            }
         }
     }
+
+    fun Modifier.vertical() =
+        layout { measurable, constraints ->
+            val placeable = measurable.measure(constraints)
+            layout(placeable.height, placeable.width) {
+                placeable.place(
+                    x = -(placeable.width / 2 - placeable.height / 2),
+                    y = -(placeable.height / 2 - placeable.width / 2)
+                )
+            }
+        }
 }
-
-fun Modifier.vertical() =
-    layout { measurable, constraints ->
-        val placeable = measurable.measure(constraints)
-        layout(placeable.height, placeable.width) {
-            placeable.place(
-                x = -(placeable.width / 2 - placeable.height / 2),
-                y = -(placeable.height / 2 - placeable.width / 2)
-            )
-        }
-    }
