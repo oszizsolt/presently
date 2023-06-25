@@ -1,41 +1,27 @@
 package components.panel
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.onDrag
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.coerceAtLeast
-import androidx.compose.ui.unit.coerceAtMost
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import io.kanro.compose.jetbrains.expui.control.*
-import io.kanro.compose.jetbrains.expui.style.AreaColors
-import io.kanro.compose.jetbrains.expui.style.LocalErrorAreaColors
-import io.kanro.compose.jetbrains.expui.style.LocalHoverAreaColors
-import java.awt.Image
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
@@ -46,8 +32,15 @@ fun PanelLayout(
     mainPanelContent: @Composable () -> Unit
 ) {
     var leftPanelSelectedItem: Int? by remember { mutableStateOf(null) }
+    val position = remember { mutableStateOf(Offset(0f,0f)) }
 
-    Row(modifier = modifier) {
+    Row(modifier = modifier
+        .onPointerEvent(PointerEventType.Move) {
+            position.value = it.changes.first().position
+//                                println("pointer x: ${position.value.x.toInt()},pointer x: ${position.value.y.toInt()}")
+//                                color = Color(position.x.toInt() % 256, position.y.toInt() % 256, 0)
+        }
+    ) {
         // 1. Left side panel (narrow)
         Column(
             modifier = Modifier
@@ -89,7 +82,7 @@ fun PanelLayout(
 
         val defaultSize = with(LocalDensity.current) { 150.dp.toPx() }
         var leftPanelWidth by remember { mutableStateOf(defaultSize) }
-        var isDragEnabled = remember { mutableStateOf(true) }
+        val isDragEnabled = remember { mutableStateOf(true) }
 
         // 2. Left side content panel
         if (leftPanelSelectedItem != null) {
@@ -105,8 +98,15 @@ fun PanelLayout(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
+                    val bounds = remember { mutableStateOf(Rect(Offset(0f,0f),Offset(0f,0f))) }
+                    val minWidth = with(LocalDensity.current) { 40.dp.toPx() }
+                    val maxWidth = with(LocalDensity.current) { 300.dp.toPx() }
+                    val startPosition = remember { mutableStateOf(Offset(0f,0f)) }
                     Box(
                         modifier = Modifier
+                            .onGloballyPositioned {
+                                bounds.value = it.boundsInRoot()
+                            }
                             .fillMaxSize()
                     ) {
                         if (leftPanelSelectedItem != null) {
@@ -149,40 +149,46 @@ fun PanelLayout(
 //                        }
                     }
 
-                    val minHeight = with(LocalDensity.current) { 40.dp.toPx() }
-                    val maxHeight = with(LocalDensity.current) { 300.dp.toPx() }
-                    val position = remember { mutableStateOf(Offset(0f,0f)) }
-                    val bounds = remember { mutableStateOf(Rect(Offset(0f,0f),Offset(0f,0f))) }
+
 
                     Box(
                         modifier = Modifier
-                            .onGloballyPositioned {
-                                bounds.value = it.boundsInRoot()
-                            }
+//                            .onGloballyPositioned {
+//                                bounds.value = it.boundsInRoot()
+//                            }
+                            .background(Color.Magenta)
                             .align(Alignment.TopEnd)
                             .width(16.dp)
                             .fillMaxHeight()
                             .pointerHoverIcon(PointerIcon(org.jetbrains.skiko.Cursor(java.awt.Cursor.W_RESIZE_CURSOR)))
-                            .onPointerEvent(PointerEventType.Move) {
-                                position.value = it.changes.first().position
-//                                color = Color(position.x.toInt() % 256, position.y.toInt() % 256, 0)
-                            }
                             .onDrag(
                                 onDragStart = {
-                                    println("OnDrag Start")
+                                    startPosition.value = position.value
+                                    println("OnDrag Start: ${startPosition.value.x}")
                                           },
                                 onDragEnd = {
                                     println("OnDrag End")
                                 },
-                                enabled = isDragEnabled.value,
+//                                enabled = isDragEnabled.value,
                             ) {
-                                println("pointer x: ${position.value.x.toInt()+bounds.value.right}, bounds right: ${bounds.value.right+30}")
-                                if ((bounds.value.right+position.value.x.toInt()) < bounds.value.right+30){
-                                    leftPanelWidth = (leftPanelWidth + it.x)
-                                        .coerceAtLeast(minHeight)
-                                        .coerceAtMost(maxHeight)
+//                                println("pointer x: ${position.value.x.toInt() + startPosition.value.x}, bounds right: ${bounds.value.right}")
+//                                println("leftPanel x: $leftPanelWidth}, bounds right: ${bounds.value.right}, maxWidth: $maxWidth")
+                                println("pointer x: ${bounds.value.right}, start: ${startPosition.value.x}, maxWidth: $maxWidth")
+//                                if (bounds.value.right < maxWidth){
+//                                if (position.value.x.toInt() + startPosition.value.x < maxWidth){
+                                if (position.value.x + 10 < bounds.value.right){
+                                    isDragEnabled.value = true
                                 }
 
+                                if (isDragEnabled.value){
+                                    leftPanelWidth = (leftPanelWidth + it.x)
+                                        .coerceAtLeast(minWidth)
+                                        .coerceAtMost(maxWidth)
+
+                                    if (leftPanelWidth >= maxWidth){
+                                        isDragEnabled.value = false
+                                    }
+                                }
                             }
 //                            .onPointerEvent(PointerEventType.Enter) { isDragEnabled.value = true }
 //                            .onPointerEvent(PointerEventType.Exit) { isDragEnabled.value = false }
@@ -195,7 +201,27 @@ fun PanelLayout(
 //                                }
 //                            }
 
-                    )
+                    ) {
+                        Popup(offset = IntOffset(40,0)) {
+                            // Draw a rectangle shape with rounded corners inside the popup
+                            Box(
+                                modifier = Modifier
+                                    .background(Color.DarkGray)
+                                    .border(1.dp, Color.LightGray)
+                                    .padding(7.dp)
+                            ) {
+
+                                Text(
+                                    text = "Bounds right: ${bounds.value.right}\n" +
+                                            "Start Pos: ${startPosition.value.x}\n" +
+                                            "leftPanelW: $leftPanelWidth\n" +
+                                            "isDragOn: ${isDragEnabled.value}\n" +
+                                            "Pointer X: ${position.value.x}",
+                                    color = Color.Green
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
