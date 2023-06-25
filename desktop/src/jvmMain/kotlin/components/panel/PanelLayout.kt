@@ -104,9 +104,9 @@ fun PanelLayout(
                     val startPosition = remember { mutableStateOf(Offset(0f,0f)) }
                     Box(
                         modifier = Modifier
-                            .onGloballyPositioned {
-                                bounds.value = it.boundsInRoot()
-                            }
+//                            .onGloballyPositioned {
+//                                bounds.value = it.boundsInRoot()
+//                            }
                             .fillMaxSize()
                     ) {
                         if (leftPanelSelectedItem != null) {
@@ -153,9 +153,9 @@ fun PanelLayout(
 
                     Box(
                         modifier = Modifier
-//                            .onGloballyPositioned {
-//                                bounds.value = it.boundsInRoot()
-//                            }
+                            .onGloballyPositioned {
+                                bounds.value = it.boundsInRoot()
+                            }
                             .background(Color.Magenta)
                             .align(Alignment.TopEnd)
                             .width(16.dp)
@@ -171,21 +171,25 @@ fun PanelLayout(
                                 },
 //                                enabled = isDragEnabled.value,
                             ) {
-//                                println("pointer x: ${position.value.x.toInt() + startPosition.value.x}, bounds right: ${bounds.value.right}")
+                                println("pointer x: ${position.value.x}, bounds left: ${bounds.value.left}, bounds right: ${bounds.value.right}, isDragOn: ${isDragEnabled.value}")
 //                                println("leftPanel x: $leftPanelWidth}, bounds right: ${bounds.value.right}, maxWidth: $maxWidth")
-                                println("pointer x: ${bounds.value.right}, start: ${startPosition.value.x}, maxWidth: $maxWidth")
 //                                if (bounds.value.right < maxWidth){
 //                                if (position.value.x.toInt() + startPosition.value.x < maxWidth){
-                                if (position.value.x + 10 < bounds.value.right){
+                                if (position.value.x <= bounds.value.right && position.value.x >= bounds.value.left){
                                     isDragEnabled.value = true
                                 }
+
+                                // If extra quick movement bug causes the cursor to slip, enable the dragging so the panel can catch up.
+//                                if (position.value.x > maxWidth && !isDragEnabled.value){
+//                                    isDragEnabled.value = true
+//                                }
 
                                 if (isDragEnabled.value){
                                     leftPanelWidth = (leftPanelWidth + it.x)
                                         .coerceAtLeast(minWidth)
                                         .coerceAtMost(maxWidth)
 
-                                    if (leftPanelWidth >= maxWidth){
+                                    if (leftPanelWidth >= maxWidth || leftPanelWidth <= minWidth){
                                         isDragEnabled.value = false
                                     }
                                 }
@@ -212,7 +216,8 @@ fun PanelLayout(
                             ) {
 
                                 Text(
-                                    text = "Bounds right: ${bounds.value.right}\n" +
+                                    text = "Bounds left: ${bounds.value.left}\n" +
+                                            "Bounds right: ${bounds.value.right}\n" +
                                             "Start Pos: ${startPosition.value.x}\n" +
                                             "leftPanelW: $leftPanelWidth\n" +
                                             "isDragOn: ${isDragEnabled.value}\n" +
