@@ -26,11 +26,12 @@ import screens.controller.songpresentationcontroller.viewmodel.SongSlideControll
 @OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalFoundationApi
 @Composable
-fun ApplicationScope.SongPresentationControllerWindow(
+fun SongPresentationControllerWindow(
     songSlideControllerViewModel: SongSlideControllerViewModel,
     songPresentationModeViewModel: SongPresentationModeViewModel,
     songControllerViewModel: SongControllerViewModel,
     songListControllerViewModel: SongListControllerViewModel,
+    onClose: () -> Unit,
 ) {
     val currentMode by songPresentationModeViewModel.mode().collectAsState(initial = PresentationMode.Normal)
     val title = songListControllerViewModel.title()
@@ -38,7 +39,7 @@ fun ApplicationScope.SongPresentationControllerWindow(
     JBWindow(
         theme = DarkTheme,
         title = "Presently - $title",
-        onCloseRequest = ::exitApplication,
+        onCloseRequest = onClose,
         onPreviewKeyEvent = {
             when {
                 (it.key == Key.H && it.type == KeyEventType.KeyUp) -> {

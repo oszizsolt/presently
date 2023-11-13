@@ -24,9 +24,10 @@ import screens.controller.biblepresentationcontroller.viewmodel.BibleSlideViewMo
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ApplicationScope.BiblePresentationControllerWindow(
+fun BiblePresentationControllerWindow(
     biblePresentationModeViewModel: BiblePresentationModeViewModel,
     bibleSlideViewModel: BibleSlideViewModel,
+    onClose: () -> Unit,
 ) {
 
     val presentationMode by biblePresentationModeViewModel.mode().collectAsState(PresentationMode.Normal)
@@ -34,7 +35,7 @@ fun ApplicationScope.BiblePresentationControllerWindow(
     JBWindow(
         theme = DarkTheme,
         title = "Presently - Bible",
-        onCloseRequest = ::exitApplication,
+        onCloseRequest = onClose,
         onPreviewKeyEvent = {
             when {
                 (it.key == Key.H && it.type == KeyEventType.KeyUp) -> {
