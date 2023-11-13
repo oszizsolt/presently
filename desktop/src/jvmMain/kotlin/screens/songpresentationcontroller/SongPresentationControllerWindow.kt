@@ -1,13 +1,8 @@
 package screens.songpresentationcontroller
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -18,9 +13,6 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
-import components.panel.PanelItem
-import components.panel.PanelItemData
-import components.panel.PanelLayout
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.SegmentedButton
 import io.kanro.compose.jetbrains.expui.theme.DarkTheme
@@ -30,7 +22,6 @@ import screens.songpresentationcontroller.viewmodel.SongControllerViewModel
 import screens.songpresentationcontroller.viewmodel.SongListControllerViewModel
 import screens.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
 import screens.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
-import java.awt.Color
 
 @OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalFoundationApi

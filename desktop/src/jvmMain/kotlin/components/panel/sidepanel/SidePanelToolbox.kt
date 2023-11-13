@@ -8,12 +8,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import components.panel.PanelItemIcon
 import components.panel.PanelItem
-import components.panel.PanelItemData
 
 @Composable
 fun SidePanelToolbox(
-    panels: List<PanelItemData>,
+    panels: List<PanelItem>,
     selectedItem: Int?,
     onSelectedItemChange: (Int?) -> Unit,
 ) {
@@ -22,7 +22,7 @@ fun SidePanelToolbox(
             .fillMaxHeight()
     ) {
         panels.forEachIndexed { index, panelItemData ->
-            PanelItem(
+            PanelItemIcon(
                 modifier = Modifier,
                 selectedState = selectedItem == index,
                 panelName = panelItemData.panelName,

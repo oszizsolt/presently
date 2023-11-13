@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import components.list.listitem.ListItem
 import components.list.listitem.SelectedState
-import components.panel.PanelItemData
+import components.panel.PanelItem
 import components.panel.PanelLayout
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.presently.service.presentation.PresentationMode
@@ -34,7 +34,7 @@ fun SongPresentationControllerScreen(
             .fillMaxSize()
     ) {
         val leftPanels = listOf(
-            PanelItemData(
+            PanelItem(
                 iconResource = "icons/bars-solid.svg",
                 panelName = "Songs"
             ) {
@@ -68,7 +68,7 @@ fun SongPresentationControllerScreen(
         )
 
         val rightPanels = listOf(
-            PanelItemData(
+            PanelItem(
                 iconResource = "icons/bars-solid.svg",
                 panelName = "Outputs"
             ) {
