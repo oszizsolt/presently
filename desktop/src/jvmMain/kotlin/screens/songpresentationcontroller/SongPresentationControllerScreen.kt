@@ -85,8 +85,8 @@ fun SongPresentationControllerScreen(
                     {
                         songSlideControllerViewModel.setSlide(slide.id)
                     },
-                    "Primary",
-                    "blue"
+                    slide.lines[0] + "\n" + slide.lines[1],
+                    slide.songId
                 )
 
 
@@ -159,5 +159,4 @@ fun SongPresentationControllerScreen(
 
             }
         }
-    }
 }

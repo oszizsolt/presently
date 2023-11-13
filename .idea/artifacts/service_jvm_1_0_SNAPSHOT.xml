@@ -1,8 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="service-jvm-1.0-SNAPSHOT">
     <output-path>$PROJECT_DIR$/service/build/libs</output-path>
-    <root id="archive" name="service-jvm-1.0-SNAPSHOT.jar">
-      <element id="module-output" name="presently.service.jvmMain" />
-    </root>
+    <root id="archive" name="service-jvm-1.0-SNAPSHOT.jar" />
   </artifact>
 </component>
