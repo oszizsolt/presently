@@ -27,8 +27,8 @@ import org.jetbrains.skia.paragraph.Direction
 @Composable
 fun PanelLayout(
     modifier: Modifier = Modifier,
-    leftPanels: List<PanelItemData>,
-    rightPanels: List<PanelItemData>,
+    leftPanels: List<PanelItemData> = emptyList(),
+    rightPanels: List<PanelItemData> = emptyList(),
     mainPanelContent: @Composable () -> Unit
 ) {
     Row(
