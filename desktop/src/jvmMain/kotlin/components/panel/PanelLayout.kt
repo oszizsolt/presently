@@ -19,120 +19,28 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import components.panel.sidepanel.SidePanel
+import org.jetbrains.skia.paragraph.Direction
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PanelLayout(
     modifier: Modifier = Modifier,
-    panelList: List<PanelItemData>,
+    leftPanels: List<PanelItemData>,
+    rightPanels: List<PanelItemData>,
     mainPanelContent: @Composable () -> Unit
 ) {
-    var leftPanelSelectedItem: Int? by remember { mutableStateOf(null) }
-
     Row(
         modifier = modifier,
     ) {
-        // 1. Left side panel (narrow)
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-        ) {
-            panelList.forEachIndexed { index, panelItemData ->
-                PanelItem(
-                    modifier = Modifier,
-                    selectedState = leftPanelSelectedItem == index,
-                    panelName = panelItemData.panelName,
-                    {
-                        leftPanelSelectedItem = if (leftPanelSelectedItem == index) {
-                            null
-                        } else {
-                            index
-                        }
-                    }
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .width(25.dp)
-                            .height(25.dp)
-                            .padding(5.dp),
-                        painter = painterResource(panelItemData.iconResource),
-                        contentDescription = "",
-                        colorFilter = ColorFilter.tint(Color.White)
-                    )
-                }
-            }
-
+        if (leftPanels.isNotEmpty()) {
+            SidePanel(
+                panels = leftPanels,
+                direction = Direction.LTR,
+            )
         }
-        Box(
-            modifier = Modifier
-                .width(1.dp)
-                .fillMaxHeight()
-                .background(Color.Black)
-        )
 
-        val defaultSize = with(LocalDensity.current) { 150.dp.toPx() }
-        var leftPanelWidth by remember { mutableStateOf(defaultSize) }
-
-        val minWidth = with(LocalDensity.current) { 40.dp.toPx() }
-        val maxWidth = with(LocalDensity.current) { 300.dp.toPx() }
-
-
-        // 2. Left side content panel
-        if (leftPanelSelectedItem != null) {
-            val panelColor by remember { mutableStateOf(Color.Gray) }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(
-                        with(LocalDensity.current) {
-                            leftPanelWidth
-                                .coerceAtLeast(minWidth)
-                                .coerceAtMost(maxWidth)
-                                .toDp()
-                        })
-
-                    .background(color = panelColor)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ) {
-                        if (leftPanelSelectedItem != null) {
-                            panelList[leftPanelSelectedItem!!].content()
-                        }
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .width(16.dp)
-                            .fillMaxHeight()
-                            .pointerHoverIcon(PointerIcon(org.jetbrains.skiko.Cursor(java.awt.Cursor.W_RESIZE_CURSOR)))
-                            .onDrag(
-                                enabled = true,
-                                onDragEnd = {
-                                    leftPanelWidth = leftPanelWidth
-                                        .coerceAtLeast(minWidth)
-                                        .coerceAtMost(maxWidth)
-                                },
-                                onDrag = {
-                                    leftPanelWidth += it.x
-                                }
-                            )
-
-                    ) {
-
-
-                    }
-                }
-            }
-        }
 
         // 3. Main panel
         Column(
@@ -142,5 +50,14 @@ fun PanelLayout(
         ) {
             mainPanelContent()
         }
+
+        if (rightPanels.isNotEmpty()) {
+            SidePanel(
+                panels = rightPanels,
+                direction = Direction.RTL,
+            )
+        }
+
+
     }
 }

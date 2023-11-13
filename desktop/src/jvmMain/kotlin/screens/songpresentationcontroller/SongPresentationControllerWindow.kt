@@ -168,9 +168,11 @@ fun ApplicationScope.SongPresentationControllerWindow(
         }
         panelList.add(panel1)
         panelList.add(panel2)
+
         PanelLayout(
             modifier = Modifier,
-            panelList = panelList
+            leftPanels = panelList,
+            rightPanels = panelList,
         ) {
             SongPresentationControllerScreen(
                 songSlideControllerViewModel = songSlideControllerViewModel,
