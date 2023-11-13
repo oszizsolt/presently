@@ -209,8 +209,6 @@ fun main() = application {
         )
     )
 
-    return@application
-
     SongPresentationControllerWindow(
         songControllerViewModel = SongControllerViewModel(
             coroutineScope = coroutineScope,
