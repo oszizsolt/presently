@@ -1,4 +1,4 @@
-package screens.songpresentationcontroller.viewmodel
+package screens.controller.songpresentationcontroller.viewmodel
 
 import io.presently.service.presentation.PresentationMode
 import io.presently.service.presentation.song.SongPresentationService

@@ -1,10 +1,9 @@
-package screens.biblepresentationcontroller
+package screens.controller.songpresentationcontroller
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -19,65 +18,70 @@ import io.kanro.compose.jetbrains.expui.control.SegmentedButton
 import io.kanro.compose.jetbrains.expui.theme.DarkTheme
 import io.kanro.compose.jetbrains.expui.window.JBWindow
 import io.presently.service.presentation.PresentationMode
-import screens.biblepresentationcontroller.viewmodel.BiblePresentationModeViewModel
-import screens.biblepresentationcontroller.viewmodel.BibleSlideViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongControllerViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongListControllerViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
+@ExperimentalFoundationApi
 @Composable
-fun ApplicationScope.BiblePresentationControllerWindow(
-    biblePresentationModeViewModel: BiblePresentationModeViewModel,
-    bibleSlideViewModel: BibleSlideViewModel,
+fun ApplicationScope.SongPresentationControllerWindow(
+    songSlideControllerViewModel: SongSlideControllerViewModel,
+    songPresentationModeViewModel: SongPresentationModeViewModel,
+    songControllerViewModel: SongControllerViewModel,
+    songListControllerViewModel: SongListControllerViewModel,
 ) {
-
-    val presentationMode by biblePresentationModeViewModel.mode().collectAsState(PresentationMode.Normal)
+    val currentMode by songPresentationModeViewModel.mode().collectAsState(initial = PresentationMode.Normal)
+    val title = songListControllerViewModel.title()
 
     JBWindow(
         theme = DarkTheme,
-        title = "Presently - Bible",
+        title = "Presently - $title",
         onCloseRequest = ::exitApplication,
         onPreviewKeyEvent = {
             when {
                 (it.key == Key.H && it.type == KeyEventType.KeyUp) -> {
-                    val newMode = if (presentationMode == PresentationMode.Hidden) {
+                    val newMode = if (currentMode == PresentationMode.Hidden) {
                         PresentationMode.Normal
                     } else {
                         PresentationMode.Hidden
                     }
 
-                    biblePresentationModeViewModel.setMode(newMode)
+                    songPresentationModeViewModel.setMode(newMode)
 
                     true
                 }
 
                 (it.key == Key.F && it.type == KeyEventType.KeyUp) -> {
 
-                    val newMode = if (presentationMode == PresentationMode.Frozen) {
+                    val newMode = if (currentMode == PresentationMode.Frozen) {
                         PresentationMode.Normal
                     } else {
                         PresentationMode.Frozen
                     }
 
-                    biblePresentationModeViewModel.setMode(newMode)
+                    songPresentationModeViewModel.setMode(newMode)
 
                     true
                 }
 
                 (it.key == Key.N && it.type == KeyEventType.KeyUp) -> {
-                    biblePresentationModeViewModel.setMode(PresentationMode.Normal)
+                    songPresentationModeViewModel.setMode(PresentationMode.Normal)
 
                     true
                 }
 
                 (it.key == Key.DirectionUp && it.type == KeyEventType.KeyDown) -> {
 
-                    bibleSlideViewModel.jumpToPrevious()
+                    songSlideControllerViewModel.jumpToPrevious()
 
                     true
                 }
 
                 (it.key == Key.DirectionDown && it.type == KeyEventType.KeyDown) -> {
 
-                    bibleSlideViewModel.jumpToNext()
+                    songSlideControllerViewModel.jumpToNext()
 
                     true
                 }
@@ -91,6 +95,9 @@ fun ApplicationScope.BiblePresentationControllerWindow(
                     .padding(end = 12.dp)
                     .mainToolBarItem(Alignment.End)
             ) {
+                val presentationMode by songPresentationModeViewModel.mode()
+                    .collectAsState(initial = PresentationMode.Normal)
+
                 val selectedIndex = when (presentationMode) {
                     PresentationMode.Normal -> 0
                     PresentationMode.Frozen -> 1
@@ -105,7 +112,7 @@ fun ApplicationScope.BiblePresentationControllerWindow(
                         else -> PresentationMode.Normal
                     }
 
-                    biblePresentationModeViewModel.setMode(newMode)
+                    songPresentationModeViewModel.setMode(newMode)
                 }) {
                     when (it) {
                         0 -> Label("Normal")
@@ -117,10 +124,11 @@ fun ApplicationScope.BiblePresentationControllerWindow(
             }
         }
     ) {
-        BiblePresentationScreen(
-            biblePresentationModeViewModel = biblePresentationModeViewModel,
-            bibleSlideViewModel = bibleSlideViewModel,
+
+        SongPresentationControllerScreen(
+            songSlideControllerViewModel = songSlideControllerViewModel,
+            songPresentationModeViewModel = songPresentationModeViewModel,
+            songControllerViewModel = songControllerViewModel,
         )
     }
 }
-

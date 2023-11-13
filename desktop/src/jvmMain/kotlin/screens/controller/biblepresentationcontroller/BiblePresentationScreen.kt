@@ -1,4 +1,4 @@
-package screens.biblepresentationcontroller
+package screens.controller.biblepresentationcontroller
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,8 +9,8 @@ import components.bible.BibleListItem
 import components.list.listitem.SelectedState
 import components.panel.PanelLayout
 import io.presently.service.presentation.PresentationMode
-import screens.biblepresentationcontroller.viewmodel.BiblePresentationModeViewModel
-import screens.biblepresentationcontroller.viewmodel.BibleSlideViewModel
+import screens.controller.biblepresentationcontroller.viewmodel.BiblePresentationModeViewModel
+import screens.controller.biblepresentationcontroller.viewmodel.BibleSlideViewModel
 
 
 @Composable

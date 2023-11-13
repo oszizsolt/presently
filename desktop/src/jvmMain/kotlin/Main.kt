@@ -9,14 +9,16 @@ import io.presently.service.song.Song
 import io.presently.service.song.SongSlide
 import io.presently.service.song.SongSlideType
 import kotlinx.datetime.Clock
-import screens.biblepresentationcontroller.BiblePresentationControllerWindow
-import screens.biblepresentationcontroller.viewmodel.BiblePresentationModeViewModel
-import screens.biblepresentationcontroller.viewmodel.BibleSlideViewModel
-import screens.songpresentationcontroller.viewmodel.SongControllerViewModel
-import screens.songpresentationcontroller.SongPresentationControllerWindow
-import screens.songpresentationcontroller.viewmodel.SongListControllerViewModel
-import screens.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
-import screens.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
+import screens.controller.biblepresentationcontroller.BiblePresentationControllerWindow
+import screens.controller.biblepresentationcontroller.viewmodel.BiblePresentationModeViewModel
+import screens.controller.biblepresentationcontroller.viewmodel.BibleSlideViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongControllerViewModel
+import screens.controller.songpresentationcontroller.SongPresentationControllerWindow
+import screens.controller.songpresentationcontroller.viewmodel.SongListControllerViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
+import screens.main.MainWindow
+import screens.main.MainWindowParts
 
 
 @ExperimentalFoundationApi
@@ -197,6 +199,8 @@ fun main() = application {
 
 
     val coroutineScope = rememberCoroutineScope()
+
+    MainWindow()
 
     BiblePresentationControllerWindow(
         biblePresentationModeViewModel = BiblePresentationModeViewModel(

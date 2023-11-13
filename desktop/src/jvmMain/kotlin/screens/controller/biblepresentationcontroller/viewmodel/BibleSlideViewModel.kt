@@ -1,4 +1,4 @@
-package screens.biblepresentationcontroller.viewmodel
+package screens.controller.biblepresentationcontroller.viewmodel
 
 import io.presently.service.bible.BibleSlide
 import io.presently.service.bible.BibleTranslation

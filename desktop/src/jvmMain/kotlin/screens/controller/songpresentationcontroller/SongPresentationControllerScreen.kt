@@ -1,4 +1,4 @@
-package screens.songpresentationcontroller
+package screens.controller.songpresentationcontroller
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -18,9 +18,9 @@ import components.panel.PanelItem
 import components.panel.PanelLayout
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.presently.service.presentation.PresentationMode
-import screens.songpresentationcontroller.viewmodel.SongControllerViewModel
-import screens.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
-import screens.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongControllerViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
+import screens.controller.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
 
 @ExperimentalFoundationApi
 @Composable
