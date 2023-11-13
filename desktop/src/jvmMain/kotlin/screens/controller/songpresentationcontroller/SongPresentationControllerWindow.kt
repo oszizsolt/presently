@@ -17,7 +17,7 @@ import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.SegmentedButton
 import io.kanro.compose.jetbrains.expui.theme.DarkTheme
 import io.kanro.compose.jetbrains.expui.window.JBWindow
-import io.presently.service.presentation.PresentationMode
+import io.presently.service.engine.PresentationMode
 import screens.controller.songpresentationcontroller.viewmodel.SongControllerViewModel
 import screens.controller.songpresentationcontroller.viewmodel.SongListControllerViewModel
 import screens.controller.songpresentationcontroller.viewmodel.SongPresentationModeViewModel

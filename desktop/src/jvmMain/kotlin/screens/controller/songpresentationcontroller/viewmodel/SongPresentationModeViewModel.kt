@@ -1,6 +1,6 @@
 package screens.controller.songpresentationcontroller.viewmodel
 
-import io.presently.service.presentation.PresentationMode
+import io.presently.service.engine.PresentationMode
 import io.presently.service.presentation.song.SongPresentationService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

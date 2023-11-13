@@ -17,7 +17,7 @@ import components.list.listitem.SelectedState
 import components.panel.PanelItem
 import components.panel.PanelLayout
 import io.kanro.compose.jetbrains.expui.control.Label
-import io.presently.service.presentation.PresentationMode
+import io.presently.service.engine.PresentationMode
 import screens.controller.songpresentationcontroller.viewmodel.SongControllerViewModel
 import screens.controller.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
 import screens.controller.songpresentationcontroller.viewmodel.SongSlideControllerViewModel

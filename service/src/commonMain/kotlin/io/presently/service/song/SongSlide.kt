@@ -1,5 +1,6 @@
 package io.presently.service.song
 
+import io.presently.service.engine.Slide
 import kotlinx.serialization.Serializable
 
 
@@ -10,4 +11,4 @@ data class SongSlide(
     val type: SongSlideType,
     val groupId: String,
     val songId: String,
-)
+) : Slide

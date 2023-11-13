@@ -1,7 +1,8 @@
 package io.presently.service.presentation.song
 
+import io.presently.service.engine.PresentationEngine
 import io.presently.service.list.SongList
-import io.presently.service.presentation.PresentationMode
+import io.presently.service.engine.PresentationMode
 import io.presently.service.song.Song
 import io.presently.service.song.SongSlide
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +11,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class SongPresentationServiceImplementation(
-    private val list: SongList
+    private val list: SongList,
+    private val engine: PresentationEngine,
 ) : SongPresentationService {
 
     private val slidesByIds: Map<String, SongSlide> = list.songs
@@ -21,8 +23,6 @@ class SongPresentationServiceImplementation(
 
     private val slides: List<SongSlide> = list.songs
         .flatMap { it.slides }
-
-    private val mode: MutableStateFlow<PresentationMode> = MutableStateFlow(PresentationMode.Normal)
 
     private val currentSlideId: MutableStateFlow<String?> = MutableStateFlow(null)
     private val selectedSlideId: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -76,23 +76,34 @@ class SongPresentationServiceImplementation(
     override fun setSlide(slideId: String?) {
         selectedSlideId.value = slideId
 
-        if (this.mode.value != PresentationMode.Frozen) {
+        if (engine.presentationMode.value != PresentationMode.Frozen) {
             currentSlideId.value = slideId
+
+            val index = slides.indexOfFirst { it.id == slideId }
+
+            val currentSlide = slides.getOrNull(index)
+            val nextSlide = slides.getOrNull(index + 1)
+
+            engine.setSlide(
+                slide = currentSlide,
+                preview = nextSlide,
+            )
         }
     }
 
     override fun setMode(mode: PresentationMode) {
-        val oldMode = this.mode.value
+        val oldMode = engine.presentationMode.value
 
-        this.mode.value = mode
+        engine.setPresentationMode(mode)
 
         if (oldMode == PresentationMode.Frozen) {
-            currentSlideId.value = selectedSlideId.value
+            setSlide(selectedSlideId.value)
+//            currentSlideId.value = selectedSlideId.value
         }
     }
 
     override fun mode(): Flow<PresentationMode> {
-        return mode
+        return engine.presentationMode
     }
 
     override fun title(): String {

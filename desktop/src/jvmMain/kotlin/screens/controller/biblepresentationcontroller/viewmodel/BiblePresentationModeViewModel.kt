@@ -1,6 +1,6 @@
 package screens.controller.biblepresentationcontroller.viewmodel
 
-import io.presently.service.presentation.PresentationMode
+import io.presently.service.engine.PresentationMode
 import io.presently.service.presentation.bible.BiblePresentationService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

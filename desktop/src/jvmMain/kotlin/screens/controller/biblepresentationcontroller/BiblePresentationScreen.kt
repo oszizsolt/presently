@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import components.bible.BibleListItem
 import components.list.listitem.SelectedState
 import components.panel.PanelLayout
-import io.presently.service.presentation.PresentationMode
+import io.presently.service.engine.PresentationMode
 import screens.controller.biblepresentationcontroller.viewmodel.BiblePresentationModeViewModel
 import screens.controller.biblepresentationcontroller.viewmodel.BibleSlideViewModel
 

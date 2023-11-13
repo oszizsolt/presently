@@ -3,13 +3,15 @@ package io.presently.service.presentation.bible
 import io.presently.service.bible.BibleBook
 import io.presently.service.bible.BibleSlide
 import io.presently.service.bible.BibleTranslation
-import io.presently.service.presentation.PresentationMode
+import io.presently.service.engine.PresentationEngine
+import io.presently.service.engine.PresentationMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 class BiblePresentationServiceImplementation(
-    books: Map<BibleTranslation, List<BibleBook>>
+    books: Map<BibleTranslation, List<BibleBook>>,
+    private val engine: PresentationEngine,
 ) : BiblePresentationService {
 
     private val translations: List<BibleTranslation> = books.keys.toList()
@@ -43,7 +45,6 @@ class BiblePresentationServiceImplementation(
 
     private val activeSlideId: MutableStateFlow<String?> = MutableStateFlow(null)
     private val selectedSlideId: MutableStateFlow<String?> = MutableStateFlow(null)
-    private val mode: MutableStateFlow<PresentationMode> = MutableStateFlow(PresentationMode.Normal)
 
     override fun activeSlide(): Flow<BibleSlide?> {
         return activeSlideId.map { id ->
@@ -62,27 +63,39 @@ class BiblePresentationServiceImplementation(
     }
 
     override fun setSlide(slide: BibleSlide?) {
-        val currentMode = mode.value
+        val currentMode = engine.presentationMode.value
 
         selectedSlideId.value = slide?.id
 
         if (currentMode != PresentationMode.Frozen) {
             activeSlideId.value = slide?.id
+
+            engine.setSlide(
+                slide = slide,
+                preview = null,
+            )
         }
     }
 
     override fun setMode(mode: PresentationMode) {
-        val oldMode = this.mode.value
+        val oldMode = engine.presentationMode.value
 
-        this.mode.value = mode
+        engine.setPresentationMode(mode)
 
         if (oldMode == PresentationMode.Frozen) {
             activeSlideId.value = selectedSlideId.value
+
+            val slide = slidesByIds[selectedSlideId.value]
+
+            engine.setSlide(
+                slide = slide,
+                preview = null,
+            )
         }
     }
 
     override fun mode(): Flow<PresentationMode> {
-        return mode
+        return engine.presentationMode
     }
 
     override fun translations(): List<BibleTranslation> {

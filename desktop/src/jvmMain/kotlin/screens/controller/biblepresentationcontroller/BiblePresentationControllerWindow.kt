@@ -18,7 +18,7 @@ import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.SegmentedButton
 import io.kanro.compose.jetbrains.expui.theme.DarkTheme
 import io.kanro.compose.jetbrains.expui.window.JBWindow
-import io.presently.service.presentation.PresentationMode
+import io.presently.service.engine.PresentationMode
 import screens.controller.biblepresentationcontroller.viewmodel.BiblePresentationModeViewModel
 import screens.controller.biblepresentationcontroller.viewmodel.BibleSlideViewModel
 
