@@ -30,7 +30,9 @@ fun PanelLayout(
 ) {
     var leftPanelSelectedItem: Int? by remember { mutableStateOf(null) }
 
-    Row {
+    Row(
+        modifier = modifier,
+    ) {
         // 1. Left side panel (narrow)
         Column(
             modifier = Modifier
