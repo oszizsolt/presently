@@ -1,17 +1,22 @@
 package components.panel.sidepanel
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.onDrag
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Colors
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
+import layouts.theme.borderColor
 import org.jetbrains.skia.paragraph.Direction
 
 
@@ -56,6 +61,18 @@ fun BoxScope.SidePanelContentDragArea(
 
                 }
             )
-
-    )
+    ) {
+        Box(
+            modifier = Modifier
+                .align(
+                    when (direction) {
+                        Direction.LTR -> Alignment.TopEnd
+                        Direction.RTL -> Alignment.TopStart
+                    }
+                )
+                .width(1.dp)
+                .fillMaxHeight()
+                .background(MaterialTheme.colors.borderColor)
+        )
+    }
 }

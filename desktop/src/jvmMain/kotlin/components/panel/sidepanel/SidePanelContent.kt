@@ -2,10 +2,12 @@ package components.panel.sidepanel
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import components.panel.PanelItem
@@ -25,8 +27,6 @@ fun SidePanelContent(
     var panelWidth by remember { mutableStateOf(defaultSize) }
 
     if (selectedItem != null) {
-        val panelColor by remember { mutableStateOf(Color.Gray) }
-
         Column(
             modifier = Modifier
                 .fillMaxHeight()
@@ -37,8 +37,6 @@ fun SidePanelContent(
                             .coerceAtMost(maxWidth)
                             .toDp()
                     })
-
-                .background(color = panelColor)
         ) {
             Box(
                 modifier = Modifier
