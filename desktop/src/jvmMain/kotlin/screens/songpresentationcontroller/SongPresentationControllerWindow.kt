@@ -133,52 +133,11 @@ fun ApplicationScope.SongPresentationControllerWindow(
             }
         }
     ) {
-        val panelList = mutableListOf<PanelItemData>()
-        val panel1 = PanelItemData(
-            iconResource = "icons/bars-solid.svg",
-            panelName ="Panel 1"
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(androidx.compose.ui.graphics.Color.Blue)
-                    .fillMaxSize()
-            ){
-                Label(
-                    modifier = Modifier
-                        .background(androidx.compose.ui.graphics.Color.DarkGray),
-                    text = "This is Panel 1\ncontent"
-                )
-            }
-        }
-        val panel2 = PanelItemData(
-            iconResource = "icons/bars-solid.svg",
-            panelName ="Panel 2"
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(androidx.compose.ui.graphics.Color.Yellow)
-            ){
-                Label(
-                    modifier = Modifier
-                        .background(androidx.compose.ui.graphics.Color.DarkGray),
-                    text = "This is Panel 2\ncontent"
-                )
-            }
-        }
-        panelList.add(panel1)
-        panelList.add(panel2)
 
-        PanelLayout(
-            modifier = Modifier,
-            leftPanels = panelList,
-            rightPanels = panelList,
-        ) {
-            SongPresentationControllerScreen(
-                songSlideControllerViewModel = songSlideControllerViewModel,
-                songPresentationModeViewModel = songPresentationModeViewModel,
-                songControllerViewModel = songControllerViewModel,
-            )
-        }
+        SongPresentationControllerScreen(
+            songSlideControllerViewModel = songSlideControllerViewModel,
+            songPresentationModeViewModel = songPresentationModeViewModel,
+            songControllerViewModel = songControllerViewModel,
+        )
     }
 }
