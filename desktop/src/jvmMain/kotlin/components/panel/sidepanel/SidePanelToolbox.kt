@@ -2,18 +2,21 @@ package components.panel.sidepanel
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import components.panel.PanelItemIcon
 import components.panel.PanelItem
-import components.panel.PanelItemData
+import layouts.theme.borderColor
+import layouts.theme.iconColor
 
 @Composable
 fun SidePanelToolbox(
-    panels: List<PanelItemData>,
+    panels: List<PanelItem>,
     selectedItem: Int?,
     onSelectedItemChange: (Int?) -> Unit,
 ) {
@@ -22,7 +25,7 @@ fun SidePanelToolbox(
             .fillMaxHeight()
     ) {
         panels.forEachIndexed { index, panelItemData ->
-            PanelItem(
+            PanelItemIcon(
                 modifier = Modifier,
                 selectedState = selectedItem == index,
                 panelName = panelItemData.panelName,
@@ -43,7 +46,7 @@ fun SidePanelToolbox(
                         .padding(5.dp),
                     painter = painterResource(panelItemData.iconResource),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(Color.White)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.iconColor)
                 )
             }
         }
