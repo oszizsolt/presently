@@ -7,14 +7,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
+import components.presentation.output.WindowOutput
+import components.presentation.slide.bible.BiblePresentation
+import components.presentation.slide.song.PreviewSongPresentation
+import components.presentation.slide.song.SongPresentation
 import io.kanro.compose.jetbrains.expui.control.ActionButton
 import io.kanro.compose.jetbrains.expui.control.Icon
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.SegmentedButton
 import io.kanro.compose.jetbrains.expui.theme.DarkTheme
 import io.kanro.compose.jetbrains.expui.window.JBWindow
+import io.presently.service.bible.BibleSlide
 import io.presently.service.engine.PresentationEngine
 import io.presently.service.engine.PresentationEngineImplementation
+import io.presently.service.engine.PresentationMode
+import io.presently.service.song.SongSlide
 import screens.editor.bibleeditor.BibleEditorScreen
 import screens.editor.configeditor.ConfigEditorScreen
 import screens.editor.songeditor.SongEditorScreen
@@ -91,8 +98,40 @@ fun ApplicationScope.MainWindow() {
     ) {
         // TODO memoize (or use viewModels instead)
 
-        if (presentationEngine != null) {
-            // launch windows
+        presentationEngine?.let { presentationEngine ->
+            val currentSlide by presentationEngine.current.collectAsState(initial = null)
+            val previewSlide by presentationEngine.preview.collectAsState(initial = null)
+            val presentationMode by presentationEngine.presentationMode.collectAsState(initial = PresentationMode.Hidden)
+
+            WindowOutput {
+                val songSlide = currentSlide as? SongSlide
+
+                SongPresentation(
+                    slide = songSlide,
+                    presentationMode = presentationMode,
+                )
+
+            }
+
+            WindowOutput {
+                val songSlide = currentSlide as? SongSlide
+                val previewSongSlide = previewSlide as? SongSlide
+
+                PreviewSongPresentation(
+                    slide = songSlide,
+                    previewSlide = previewSongSlide,
+                    presentationMode = presentationMode,
+                )
+            }
+
+            WindowOutput {
+                val bibleSlide = currentSlide as? BibleSlide
+
+                BiblePresentation(
+                    slide = bibleSlide,
+                    presentationMode = presentationMode,
+                )
+            }
         }
 
         CompositionLocalProvider(LocalEngine provides presentationEngine) {

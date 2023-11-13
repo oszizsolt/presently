@@ -10,11 +10,15 @@ class PresentationEngineImplementation(
     private val _presentationMode = MutableStateFlow(PresentationMode.Normal)
 
     private val currentSlide = MutableStateFlow<Slide?>(null)
-    private val nextSlide = MutableStateFlow<Slide?>(null)
+    private val previewSlide = MutableStateFlow<Slide?>(null)
+    override val current: StateFlow<Slide?>
+        get() = currentSlide.asStateFlow()
+    override val preview: StateFlow<Slide?>
+        get() = previewSlide.asStateFlow()
 
     override fun setSlide(slide: Slide?, preview: Slide?) {
         currentSlide.value = slide
-        nextSlide.value = preview
+        previewSlide.value = preview
     }
 
     override fun setPresentationMode(presentationMode: PresentationMode) {
