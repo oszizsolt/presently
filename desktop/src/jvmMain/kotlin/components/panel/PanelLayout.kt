@@ -127,6 +127,10 @@ fun PanelLayout(
         val defaultSize = with(LocalDensity.current) { 150.dp.toPx() }
         var leftPanelWidth by remember { mutableStateOf(defaultSize) }
 
+        val minHeight = with(LocalDensity.current) { 40.dp.toPx() }
+        val maxHeight = with(LocalDensity.current) { 300.dp.toPx() }
+
+
         // 2. Left side content panel
         if (leftPanelSelectedItem != null) {
             var panelColor by remember { mutableStateOf(Color.Gray) }
@@ -134,7 +138,14 @@ fun PanelLayout(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(with(LocalDensity.current) { leftPanelWidth.toDp() })
+                    .width(
+                        with(LocalDensity.current) {
+                            leftPanelWidth
+                                .coerceAtLeast(minHeight)
+                                .coerceAtMost(maxHeight)
+                                .toDp()
+                        })
+
                     .background(color = panelColor)
             ) {
                 Box(
@@ -182,10 +193,6 @@ fun PanelLayout(
                         }
                     }
 
-                    val minHeight = with(LocalDensity.current) { 40.dp.toPx() }
-                    val maxHeight = with(LocalDensity.current) { 300.dp.toPx() }
-
-
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
@@ -193,9 +200,7 @@ fun PanelLayout(
                             .fillMaxHeight()
                             .pointerHoverIcon(PointerIcon(org.jetbrains.skiko.Cursor(java.awt.Cursor.W_RESIZE_CURSOR)))
                             .onDrag {
-                                leftPanelWidth = (leftPanelWidth + it.x)
-                                    .coerceAtLeast(minHeight)
-                                    .coerceAtMost(maxHeight)
+                                leftPanelWidth += it.x
                             }
 
                     )
