@@ -76,12 +76,12 @@ fun SongPresentationControllerScreen(
                 ListItem(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    selectedState = when{
+                    selectedState = when {
                         currentMode == PresentationMode.Hidden && currentSlide?.id == slide.id -> SelectedState.SecondarySelected
                         currentSlide?.id == slide.id -> SelectedState.PrimarySelected
                         selectedSlide?.id == slide.id -> SelectedState.TernarySelected
                         else -> SelectedState.NotSelected
-                        },
+                    },
                     {
                         songSlideControllerViewModel.setSlide(slide.id)
                     },
@@ -90,73 +90,73 @@ fun SongPresentationControllerScreen(
                 )
 
 
-                }
             }
         }
-        Column(
-            Modifier
-                .width(256.dp)
-        ) {
-            val currentSlide by songSlideControllerViewModel.active().collectAsState(initial = null)
+    }
+    Column(
+        Modifier
+            .width(256.dp)
+    ) {
+        val currentSlide by songSlideControllerViewModel.active().collectAsState(initial = null)
 //            val nextSlides by songSlideControllerViewModel.nextSlides(howMany = 2).collectAsState(initial = emptyList())
-            val currentMode by songPresentationModeViewModel.mode().collectAsState(initial = PresentationMode.Normal)
+        val currentMode by songPresentationModeViewModel.mode().collectAsState(initial = PresentationMode.Normal)
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .padding(all = 4.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .background(Color.Black)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .padding(all = 4.dp)
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .background(Color.Black)
+        ) {
+            Column(
+                Modifier.fillMaxWidth(),
             ) {
-                Column(
-                    Modifier.fillMaxWidth(),
+                if (currentMode != PresentationMode.Hidden) {
+                    currentSlide?.let { currentSlide ->
+                        currentSlide.lines.forEach { line ->
+                            Row {
+                                Label(
+                                    line,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        Row(
+            Modifier
+                .padding(all = 4.dp)
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .background(Color.Black)
+        ) {
+            Column {
+                Row(
+                    Modifier
+                        .padding(top = 2.dp)
+                        .padding(bottom = 8.dp)
                 ) {
-                    if (currentMode != PresentationMode.Hidden) {
+                    Column {
                         currentSlide?.let { currentSlide ->
                             currentSlide.lines.forEach { line ->
                                 Row {
-                                    Label(
-                                        line,
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                }
-
-            }
-
-            Row(
-                Modifier
-                    .padding(all = 4.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .background(Color.Black)
-            ) {
-                Column {
-                    Row(
-                        Modifier
-                            .padding(top = 2.dp)
-                            .padding(bottom = 8.dp)
-                    ) {
-                        Column {
-                            currentSlide?.let { currentSlide ->
-                                currentSlide.lines.forEach { line ->
-                                    Row {
-                                        Label(line)
-                                    }
+                                    Label(line)
                                 }
                             }
                         }
                     }
                 }
-
-
             }
+
+
         }
+    }
 }
