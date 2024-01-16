@@ -1,0 +1,3 @@
+package io.presently.service.engine.presentationoutput.output
+
+sealed interface PresentationOutputConfig

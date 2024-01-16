@@ -1,11 +1,12 @@
 package io.presently.service.engine
 
+import io.presently.service.engine.presentationoutput.OutputConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class PresentationEngineImplementation(
-    // TODO config
+    override val outputs: List<OutputConfig>,
 ) : PresentationEngine {
     private val _presentationMode = MutableStateFlow(PresentationMode.Normal)
 
@@ -27,8 +28,5 @@ class PresentationEngineImplementation(
 
     override val presentationMode: StateFlow<PresentationMode>
         get() = _presentationMode.asStateFlow()
-
-    override val outputs: StateFlow<List<Unit>>
-        get() = MutableStateFlow(emptyList<Unit>()).asStateFlow()
 
 }

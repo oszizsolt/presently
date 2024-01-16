@@ -7,6 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,11 +24,18 @@ fun SongPresentation(
     slide: SongSlide?,
     presentationMode: PresentationMode,
     backgroundColor: Color = Color.Black,
+    fontFamily: String? = null,
     fontColor: Color = Color.White,
     fontSize: TextUnit = 25.sp,
     modifier: Modifier = Modifier,
 ) {
     if (presentationMode == PresentationMode.Hidden) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(backgroundColor),
+        )
+
         return
     }
 
@@ -44,6 +54,9 @@ fun SongPresentation(
                     text = line,
                     color = fontColor,
                     fontSize = fontSize,
+                    fontFamily = fontFamily?.let {
+                        FontFamily(Font(it))
+                    },
                 )
             }
         }
@@ -71,7 +84,7 @@ fun SongPresentation_Preview() {
                     type = SongSlideType.Normal,
                     groupId = "1",
                     songId = "1",
-                )
+                ),
             )
         }
     }

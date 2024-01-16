@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -14,6 +16,7 @@ import common.preview.PreviewContainer
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.presently.service.bible.BibleSlide
 import io.presently.service.engine.PresentationMode
+import io.presently.service.engine.presentationoutput.slide.BiblePresentationSlideConfig
 
 @Composable
 fun BiblePresentation(
@@ -22,11 +25,19 @@ fun BiblePresentation(
     backgroundColor: Color = Color.Black,
     fontColor: Color = Color.White,
     fontSize: TextUnit = 25.sp,
+    fontFamily: String? = null,
     verseFontColor: Color = Color.White,
     verseFontSize: TextUnit = 20.sp,
+    verseFontFamily: String? = null,
     modifier: Modifier = Modifier,
 ) {
     if (presentationMode == PresentationMode.Hidden) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(backgroundColor),
+        )
+
         return
     }
 
@@ -46,6 +57,9 @@ fun BiblePresentation(
                     text = content,
                     color = fontColor,
                     fontSize = fontSize,
+                    fontFamily = fontFamily?.let {
+                        FontFamily(Font(it))
+                    },
                 )
             }
 
@@ -56,6 +70,9 @@ fun BiblePresentation(
                     text = "${slide.book} ${slide.chapter}:${slide.verse}",
                     color = verseFontColor,
                     fontSize = verseFontSize,
+                    fontFamily = verseFontFamily?.let {
+                        FontFamily(Font(it))
+                    },
                 )
             }
         }

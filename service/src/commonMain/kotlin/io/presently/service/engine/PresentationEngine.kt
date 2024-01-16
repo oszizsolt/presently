@@ -1,5 +1,6 @@
 package io.presently.service.engine
 
+import io.presently.service.engine.presentationoutput.OutputConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -15,6 +16,10 @@ interface PresentationEngine {
 
     val presentationMode: StateFlow<PresentationMode>
 
-    val outputs: StateFlow<List<Unit>>
+    val outputs: List<OutputConfig>
 
 }
+
+
+
+

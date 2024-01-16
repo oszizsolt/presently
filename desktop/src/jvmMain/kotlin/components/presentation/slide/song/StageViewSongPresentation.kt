@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.platform.Font
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -17,7 +19,7 @@ import io.presently.service.song.SongSlide
 import io.presently.service.song.SongSlideType
 
 @Composable
-fun PreviewSongPresentation(
+fun StageViewSongPresentation(
     slide: SongSlide?,
     previewSlide: SongSlide?,
     presentationMode: PresentationMode,
@@ -26,6 +28,8 @@ fun PreviewSongPresentation(
     previewFontColor: Color = Color.Yellow,
     fontSize: TextUnit = 25.sp,
     previewFontSize: TextUnit = 20.sp,
+    fontFamily: String? = null,
+    previewFontFamily: String? = null,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -61,6 +65,9 @@ fun PreviewSongPresentation(
                         text = line,
                         color = fontColor,
                         fontSize = fontSize,
+                        fontFamily = fontFamily?.let {
+                            FontFamily(Font(it))
+                        },
                     )
                 }
             }
@@ -76,6 +83,9 @@ fun PreviewSongPresentation(
                         text = line,
                         color = previewFontColor,
                         fontSize = previewFontSize,
+                        fontFamily = previewFontFamily?.let {
+                            FontFamily(Font(it))
+                        },
                     )
                 }
             }
@@ -87,14 +97,14 @@ fun PreviewSongPresentation(
 
 @Preview
 @Composable
-fun PreviewSongPresentation_Preview() {
+fun StageViewSongPresentation_Preview() {
     PreviewContainer {
         Box(
             modifier = Modifier
                 .width(800.dp)
                 .height(500.dp)
         ) {
-            PreviewSongPresentation(
+            StageViewSongPresentation(
                 presentationMode = PresentationMode.Normal,
                 slide = SongSlide(
                     id = "1",
