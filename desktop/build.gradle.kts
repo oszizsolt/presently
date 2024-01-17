@@ -27,11 +27,21 @@ kotlin {
                     exclude("org.jetbrains.compose.material")
                 }
 
-                implementation("com.bybutter.compose:compose-jetbrains-expui-theme:2.0.0")
+                implementation("com.bybutter.compose:compose-jetbrains-expui-theme:2.2.0")
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+
+                val exposedVersion = "0.46.0"
+
+                implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+                implementation("org.xerial:sqlite-jdbc:3.44.1.0")
+                implementation("com.h2database:h2:2.2.224")
             }
         }
         val jvmTest by getting

@@ -12,13 +12,11 @@ import components.presentation.output.WindowOutput
 import components.presentation.slide.bible.BiblePresentation
 import components.presentation.slide.song.StageViewSongPresentation
 import components.presentation.slide.song.SongPresentation
-import io.kanro.compose.jetbrains.expui.control.ActionButton
-import io.kanro.compose.jetbrains.expui.control.Icon
-import io.kanro.compose.jetbrains.expui.control.Label
-import io.kanro.compose.jetbrains.expui.control.SegmentedButton
+import io.kanro.compose.jetbrains.expui.control.*
 import io.kanro.compose.jetbrains.expui.theme.DarkTheme
 import io.kanro.compose.jetbrains.expui.window.JBWindow
 import io.presently.service.bible.BibleSlide
+import io.presently.service.config.Config
 import io.presently.service.engine.PresentationEngine
 import io.presently.service.engine.PresentationEngineImplementation
 import io.presently.service.engine.PresentationMode
@@ -43,6 +41,7 @@ enum class MainWindowParts {
 fun ApplicationScope.MainWindow() {
     var selectedPart by remember { mutableStateOf(MainWindowParts.Song) }
     var presentationEngine by remember { mutableStateOf<PresentationEngine?>(null) }
+    var currentConfig by remember { mutableStateOf<Config?>(null) }
 
     JBWindow(
         theme = DarkTheme,
@@ -78,58 +77,57 @@ fun ApplicationScope.MainWindow() {
                     .mainToolBarItem(Alignment.End)
             ) {
 
-                Label("selected config")
+                val configService = LocalConfigService.current
+                var isMenuExpanded by remember { mutableStateOf(false) }
+                var configs by remember { mutableStateOf(emptyList<io.presently.service.config.Config>()) }
+
+                LaunchedEffect(isMenuExpanded) {
+                    if (!isMenuExpanded) {
+                        return@LaunchedEffect
+                    }
+
+                    configs = configService.get()
+                }
+
+                DropdownLink(
+                    text = currentConfig?.name ?: "No configuration",
+                    onClick = { isMenuExpanded = true },
+                    enabled = presentationEngine == null,
+                )
+                DropdownMenu(
+                    expanded = isMenuExpanded,
+                    onDismissRequest = {
+                        isMenuExpanded = false
+                    },
+                ) {
+                    configs.forEach { config ->
+                        DropdownMenuItem({
+                            currentConfig = config
+                            isMenuExpanded = false
+                        }) {
+                            Label(config.name)
+                        }
+                    }
+
+                    DropdownMenuItem({
+                        currentConfig = null
+                        isMenuExpanded = false
+                    }) {
+                        Label("-")
+                    }
+                }
 
                 ActionButton(
                     onClick = {
                         presentationEngine = if (presentationEngine == null) {
                             PresentationEngineImplementation(
-                                // TODO DB arch
-                                outputs = listOf(
-                                    OutputConfig(
-                                        name = "Test Stage View",
-                                        outputConfig = WindowPresentationOutputConfig(
-                                            resolution = WindowPresentationOutputConfig.FixedResolution(
-                                                width = 640,
-                                                height = 480,
-                                                resizable = false,
-                                            ),
-                                        ),
-                                        slideConfig = StageViewSongPresentationSlideConfig(
-                                            font = null,
-                                            previewFont = null,
-                                            fontSize = 18,
-                                            previewFontSize = 16,
-                                            fontColor = 0xffffffffL,
-                                            previewFontColor = 0xffffffffL,
-                                            backgroundColor = 0xff000000L,
-                                        ),
-                                    ),
-                                    OutputConfig(
-                                        name = "Test Bible",
-                                        outputConfig = WindowPresentationOutputConfig(
-                                            resolution = WindowPresentationOutputConfig.FixedResolution(
-                                                width = 640,
-                                                height = 480,
-                                                resizable = false,
-                                            ),
-                                        ),
-                                        slideConfig = BiblePresentationSlideConfig(
-                                            font = null,
-                                            fontSize = 18,
-                                            fontColor = 0xffffffffL,
-                                            backgroundColor = 0xff000000L,
-                                            verseFontColor = 0xffffffffL,
-                                            verseFontSize = 14,
-                                            verseFont = null,
-                                        ),
-                                    ),
-                                )
+                                outputs = currentConfig?.outputs ?: emptyList(),
                             )
                         } else {
                             null
                         }
                     },
+                    enabled = currentConfig != null,
                 ) {
                     Icon(
                         if (presentationEngine == null) {
@@ -144,30 +142,32 @@ fun ApplicationScope.MainWindow() {
     ) {
         // TODO memoize (or use viewModels instead)
 
-        presentationEngine?.let { presentationEngine ->
-            val currentSlide by presentationEngine.current.collectAsState(initial = null)
-            val previewSlide by presentationEngine.preview.collectAsState(initial = null)
-            val presentationMode by presentationEngine.presentationMode.collectAsState(initial = PresentationMode.Hidden)
+        CompositionLocalProvider(LocalCurrentConfig provides currentConfig) {
+            presentationEngine?.let { presentationEngine ->
+                val currentSlide by presentationEngine.current.collectAsState(initial = null)
+                val previewSlide by presentationEngine.preview.collectAsState(initial = null)
+                val presentationMode by presentationEngine.presentationMode.collectAsState(initial = PresentationMode.Hidden)
 
-            presentationEngine.outputs.forEach { output ->
-                key(output.name) {
-                    EngineOutputFactory(
-                        slide = currentSlide,
-                        nextSlide = previewSlide,
-                        presentationMode = presentationMode,
-                        outputConfig = output.outputConfig,
-                        slideConfig = output.slideConfig,
-                    )
+                presentationEngine.outputs.forEach { output ->
+                    key(output.name) {
+                        EngineOutputFactory(
+                            slide = currentSlide,
+                            nextSlide = previewSlide,
+                            presentationMode = presentationMode,
+                            outputConfig = output.outputConfig,
+                            slideConfig = output.slideConfig,
+                        )
+                    }
                 }
             }
-        }
 
-        CompositionLocalProvider(LocalEngine provides presentationEngine) {
-            when (selectedPart) {
-                MainWindowParts.Song -> SongEditorScreen()
-                MainWindowParts.List -> SongListEditorScreen()
-                MainWindowParts.Config -> ConfigEditorScreen()
-                MainWindowParts.Bible -> BibleEditorScreen()
+            CompositionLocalProvider(LocalEngine provides presentationEngine) {
+                when (selectedPart) {
+                    MainWindowParts.Song -> SongEditorScreen()
+                    MainWindowParts.List -> SongListEditorScreen()
+                    MainWindowParts.Config -> ConfigEditorScreen()
+                    MainWindowParts.Bible -> BibleEditorScreen()
+                }
             }
         }
     }

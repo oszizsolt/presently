@@ -1,5 +1,8 @@
 package io.presently.service.engine.presentationoutput.slide
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class StageViewSongPresentationSlideConfig(
     val font: String?,
     val previewFont: String?,

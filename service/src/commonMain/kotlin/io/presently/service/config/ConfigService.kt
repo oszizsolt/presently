@@ -1,36 +1,17 @@
 package io.presently.service.config
 
+import io.presently.service.engine.presentationoutput.OutputConfig
+
 
 data class Config(
     val name: String,
-    val outputs: List<Output>
+    val outputs: List<OutputConfig>
 )
-
-data class Output(
-    val name: String,
-    val config: OutputConfig,
-    val views: List<PresentationView>
-)
-
-data class PresentationView(
-    val name: String,
-    val config: PresentationViewConfig
-)
-
-
-interface OutputConfig {
-    val isEnabled: Boolean
-}
-
-interface PresentationViewConfig {
-    val isEnabled: Boolean
-}
 
 interface ConfigService {
-    fun get(): List<Config>
+    suspend fun get(): List<Config>
 
-    fun delete(name: String)
+    suspend fun delete(name: String)
 
-    fun put(config: Config)
-
+    suspend fun put(config: Config)
 }
