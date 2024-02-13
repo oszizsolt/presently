@@ -5,6 +5,7 @@ import androidx.compose.runtime.compositionLocalOf
 import io.presently.service.config.Config
 import io.presently.service.config.ConfigService
 import io.presently.service.engine.presentationoutput.OutputConfig
+import io.presently.service.engine.presentationoutput.output.FullscreenPresentationOutputConfig
 import io.presently.service.engine.presentationoutput.output.WindowPresentationOutputConfig
 import io.presently.service.engine.presentationoutput.slide.BiblePresentationSlideConfig
 import io.presently.service.engine.presentationoutput.slide.SongPresentationSlideConfig
@@ -28,11 +29,9 @@ val LocalConfigService = compositionLocalOf<ConfigService> {
                     OutputConfig(
                         name = "Test Stage View",
                         outputConfig = WindowPresentationOutputConfig(
-                            resolution = WindowPresentationOutputConfig.FixedResolution(
-                                width = 640,
-                                height = 480,
-                                resizable = false,
-                            ),
+                            width = 640,
+                            height = 480,
+                            resizable = false,
                         ),
                         slideConfig = StageViewSongPresentationSlideConfig(
                             font = null,
@@ -47,11 +46,9 @@ val LocalConfigService = compositionLocalOf<ConfigService> {
                     OutputConfig(
                         name = "Test Bible",
                         outputConfig = WindowPresentationOutputConfig(
-                            resolution = WindowPresentationOutputConfig.FixedResolution(
-                                width = 640,
-                                height = 480,
-                                resizable = false,
-                            ),
+                            width = 640,
+                            height = 480,
+                            resizable = false,
                         ),
                         slideConfig = BiblePresentationSlideConfig(
                             font = null,
@@ -74,11 +71,29 @@ val LocalConfigService = compositionLocalOf<ConfigService> {
                     OutputConfig(
                         name = "Test Song",
                         outputConfig = WindowPresentationOutputConfig(
-                            resolution = WindowPresentationOutputConfig.FixedResolution(
-                                width = 640,
-                                height = 480,
-                                resizable = false,
-                            ),
+                            width = 640,
+                            height = 480,
+                            resizable = false,
+                        ),
+                        slideConfig = SongPresentationSlideConfig(
+                            font = null,
+                            fontSize = 18,
+                            fontColor = 0xffffffffL,
+                            backgroundColor = 0xff000000L,
+                        ),
+                    ),
+                )
+            )
+        )
+
+        service.put(
+            Config(
+                name = "Fullscreen test",
+                outputs = listOf(
+                    OutputConfig(
+                        name = "Test Song",
+                        outputConfig = FullscreenPresentationOutputConfig(
+                            displayId = null,
                         ),
                         slideConfig = SongPresentationSlideConfig(
                             font = null,

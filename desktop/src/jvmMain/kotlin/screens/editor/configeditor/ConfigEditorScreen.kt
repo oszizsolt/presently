@@ -12,10 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import components.panel.PanelItem
 import components.panel.PanelLayout
+import components.presentation.output.PresentationOutputEditorFactory
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.PrimaryButton
 import io.presently.service.config.Config
 import io.presently.service.engine.presentationoutput.OutputConfig
+import kotlinx.coroutines.launch
 import screens.main.LocalConfigService
 import screens.main.LocalCurrentConfig
 
@@ -32,9 +34,11 @@ fun ConfigEditorScreen() {
         configs = configService.get()
     }
 
+    val scope = rememberCoroutineScope()
+
     // TODO:
-    // - selectedConfig
-    // - config editors for every config type + factory
+    // - selectedConfig         <- done?
+    // - config editors for every config type + factory         <- doing now
     // - move config selection to the left side
     // - add current config output list to right side
     // - add current output and slide settings to the center
@@ -108,6 +112,36 @@ fun ConfigEditorScreen() {
             }
         )
     ) {
+        // TODO output and slide type selection
+
+        if (selectedOutput?.outputConfig != null) {
+            PresentationOutputEditorFactory(
+                config = selectedOutput?.outputConfig!!,
+                onConfigChange = { newConfig ->
+                    selectedConfig?.let { selectedConfig ->
+                        scope.launch {
+                            configService.put(
+                                selectedConfig.copy(
+                                    outputs = selectedConfig.outputs
+                                        .map {
+                                            if (it == selectedOutput) {
+                                                selectedOutput!!.copy(
+                                                    outputConfig = newConfig,
+                                                )
+                                            } else {
+                                                it
+                                            }
+                                        },
+                                ),
+                            )
+                        }
+
+                    }
+
+                }
+            )
+        }
+
         Label(selectedOutput?.name ?: "hamham")
     }
 }
