@@ -22,113 +22,113 @@ val LocalCurrentConfig = compositionLocalOf<Config?> {
 val LocalConfigService = compositionLocalOf<ConfigService> {
     val service = DbConfigService()
 
-    GlobalScope.launch {
-        service.put(
-            Config(
-                name = "Test 1",
-                outputs = listOf(
-                    OutputConfig(
-                        name = "Test Stage View",
-                        outputConfig = WindowPresentationOutputConfig(
-                            width = 640,
-                            height = 480,
-                            resizable = false,
-                        ),
-                        slideConfig = StageViewSongPresentationSlideConfig(
-                            font = null,
-                            previewFont = null,
-                            fontSize = 18,
-                            previewFontSize = 16,
-                            fontColor = 0xffffffffL,
-                            previewFontColor = 0xffffffffL,
-                            backgroundColor = 0xff000000L,
-                        ),
-                    ),
-                    OutputConfig(
-                        name = "Test Bible",
-                        outputConfig = WindowPresentationOutputConfig(
-                            width = 640,
-                            height = 480,
-                            resizable = false,
-                        ),
-                        slideConfig = BiblePresentationSlideConfig(
-                            font = null,
-                            fontSize = 18,
-                            fontColor = 0xffffffffL,
-                            backgroundColor = 0xff000000L,
-                            verseFontColor = 0xffffffffL,
-                            verseFontSize = 14,
-                            verseFont = null,
-                        ),
-                    ),
-                )
-            )
-        )
-
-        service.put(
-            Config(
-                name = "Test 2",
-                outputs = listOf(
-                    OutputConfig(
-                        name = "Test Song",
-                        outputConfig = WindowPresentationOutputConfig(
-                            width = 640,
-                            height = 480,
-                            resizable = false,
-                        ),
-                        slideConfig = SongPresentationSlideConfig(
-                            font = null,
-                            fontSize = 18,
-                            fontColor = 0xffffffffL,
-                            backgroundColor = 0xff000000L,
-                        ),
-                    ),
-                )
-            )
-        )
-
-        service.put(
-            Config(
-                name = "Fullscreen test",
-                outputs = listOf(
-                    OutputConfig(
-                        name = "Test Song",
-                        outputConfig = FullscreenPresentationOutputConfig(
-                            displayId = null,
-                        ),
-                        slideConfig = SongPresentationSlideConfig(
-                            font = null,
-                            fontSize = 18,
-                            fontColor = 0xffffffffL,
-                            backgroundColor = 0xff000000L,
-                        ),
-                    ),
-                )
-            )
-        )
-
-        service.put(
-            Config(
-                name = "NDI test",
-                outputs = listOf(
-                    OutputConfig(
-                        name = "Test Song",
-                        outputConfig = NDIPresentationOutputConfig(
-                            name = "Presently NDI test",
-                            width = 1920,
-                            height = 1080,
-                        ),
-                        slideConfig = SongPresentationSlideConfig(
-                            font = null,
-                            fontSize = 18,
-                            fontColor = 0xffffffffL,
-                            backgroundColor = 0xff000000L,
-                        ),
-                    ),
-                )
-            )
-        )
-    }
+//    GlobalScope.launch {
+//        service.put(
+//            Config(
+//                name = "Test 1",
+//                outputs = listOf(
+//                    OutputConfig(
+//                        name = "Test Stage View",
+//                        outputConfig = WindowPresentationOutputConfig(
+//                            width = 640,
+//                            height = 480,
+//                            resizable = false,
+//                        ),
+//                        slideConfig = StageViewSongPresentationSlideConfig(
+//                            font = null,
+//                            previewFont = null,
+//                            fontSize = 18,
+//                            previewFontSize = 16,
+//                            fontColor = 0xffffffffL,
+//                            previewFontColor = 0xffffffffL,
+//                            backgroundColor = 0xff000000L,
+//                        ),
+//                    ),
+//                    OutputConfig(
+//                        name = "Test Bible",
+//                        outputConfig = WindowPresentationOutputConfig(
+//                            width = 640,
+//                            height = 480,
+//                            resizable = false,
+//                        ),
+//                        slideConfig = BiblePresentationSlideConfig(
+//                            font = null,
+//                            fontSize = 18,
+//                            fontColor = 0xffffffffL,
+//                            backgroundColor = 0xff000000L,
+//                            verseFontColor = 0xffffffffL,
+//                            verseFontSize = 14,
+//                            verseFont = null,
+//                        ),
+//                    ),
+//                )
+//            )
+//        )
+//
+//        service.put(
+//            Config(
+//                name = "Test 2",
+//                outputs = listOf(
+//                    OutputConfig(
+//                        name = "Test Song",
+//                        outputConfig = WindowPresentationOutputConfig(
+//                            width = 640,
+//                            height = 480,
+//                            resizable = false,
+//                        ),
+//                        slideConfig = SongPresentationSlideConfig(
+//                            font = null,
+//                            fontSize = 18,
+//                            fontColor = 0xffffffffL,
+//                            backgroundColor = 0xff000000L,
+//                        ),
+//                    ),
+//                )
+//            )
+//        )
+//
+//        service.put(
+//            Config(
+//                name = "Fullscreen test",
+//                outputs = listOf(
+//                    OutputConfig(
+//                        name = "Test Song",
+//                        outputConfig = FullscreenPresentationOutputConfig(
+//                            displayId = null,
+//                        ),
+//                        slideConfig = SongPresentationSlideConfig(
+//                            font = null,
+//                            fontSize = 18,
+//                            fontColor = 0xffffffffL,
+//                            backgroundColor = 0xff000000L,
+//                        ),
+//                    ),
+//                )
+//            )
+//        )
+//
+//        service.put(
+//            Config(
+//                name = "NDI test",
+//                outputs = listOf(
+//                    OutputConfig(
+//                        name = "Test Song",
+//                        outputConfig = NDIPresentationOutputConfig(
+//                            name = "Presently NDI test",
+//                            width = 1920,
+//                            height = 1080,
+//                        ),
+//                        slideConfig = SongPresentationSlideConfig(
+//                            font = null,
+//                            fontSize = 18,
+//                            fontColor = 0xffffffffL,
+//                            backgroundColor = 0xff000000L,
+//                        ),
+//                    ),
+//                )
+//            )
+//        )
+//    }
 
     service
 }
