@@ -19,6 +19,7 @@ fun EngineOutputFactory(
     modifier: Modifier = Modifier,
 ) {
     PresentationOutputFactory(
+        hash = slide.hashCode().toString() + "|" + nextSlide.hashCode().toString() + "|" + presentationMode.hashCode().toString(),
         config = outputConfig,
     ) {
         PresentationSlideFactory(

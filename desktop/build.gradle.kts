@@ -42,6 +42,10 @@ kotlin {
                 implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
                 implementation("org.xerial:sqlite-jdbc:3.44.1.0")
                 implementation("com.h2database:h2:2.2.224")
+
+                // TODO do not use the intergrated module, but use the separated one, with automatic detection of installed ndi, and link to ndi installation if needed
+                // https://github.com/WalkerKnapp/devolay#%EF%B8%8Flicensing-considerations%EF%B8%8F
+                implementation("me.walkerknapp:devolay:2.1.0:integrated")
             }
         }
         val jvmTest by getting

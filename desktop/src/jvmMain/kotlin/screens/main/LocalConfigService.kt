@@ -6,6 +6,7 @@ import io.presently.service.config.Config
 import io.presently.service.config.ConfigService
 import io.presently.service.engine.presentationoutput.OutputConfig
 import io.presently.service.engine.presentationoutput.output.FullscreenPresentationOutputConfig
+import io.presently.service.engine.presentationoutput.output.NDIPresentationOutputConfig
 import io.presently.service.engine.presentationoutput.output.WindowPresentationOutputConfig
 import io.presently.service.engine.presentationoutput.slide.BiblePresentationSlideConfig
 import io.presently.service.engine.presentationoutput.slide.SongPresentationSlideConfig
@@ -94,6 +95,28 @@ val LocalConfigService = compositionLocalOf<ConfigService> {
                         name = "Test Song",
                         outputConfig = FullscreenPresentationOutputConfig(
                             displayId = null,
+                        ),
+                        slideConfig = SongPresentationSlideConfig(
+                            font = null,
+                            fontSize = 18,
+                            fontColor = 0xffffffffL,
+                            backgroundColor = 0xff000000L,
+                        ),
+                    ),
+                )
+            )
+        )
+
+        service.put(
+            Config(
+                name = "NDI test",
+                outputs = listOf(
+                    OutputConfig(
+                        name = "Test Song",
+                        outputConfig = NDIPresentationOutputConfig(
+                            name = "Presently NDI test",
+                            width = 1920,
+                            height = 1080,
                         ),
                         slideConfig = SongPresentationSlideConfig(
                             font = null,

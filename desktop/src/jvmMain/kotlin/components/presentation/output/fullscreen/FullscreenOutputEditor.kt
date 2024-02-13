@@ -2,13 +2,10 @@ package components.presentation.output.window
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import io.kanro.compose.jetbrains.expui.control.*
 import io.presently.service.engine.presentationoutput.output.FullscreenPresentationOutputConfig
-import io.presently.service.engine.presentationoutput.output.WindowPresentationOutputConfig
 import java.awt.GraphicsEnvironment
 
 @Composable

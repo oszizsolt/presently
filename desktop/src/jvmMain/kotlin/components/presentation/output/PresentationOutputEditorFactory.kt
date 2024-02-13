@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.presentation.output.window.FullscreenOutputEditor
+import components.presentation.output.window.NDIOutputEditor
 import components.presentation.output.window.WindowOutput
 import components.presentation.output.window.WindowOutputEditor
 import io.kanro.compose.jetbrains.expui.control.Label
@@ -38,13 +39,16 @@ fun PresentationOutputEditorFactory(
         Box(Modifier.height(12.dp))
 
         when (config) {
-            is NDIPresentationOutputConfig -> {
-                TODO()
-            }
+            is NDIPresentationOutputConfig -> NDIOutputEditor(
+                config = config,
+                onConfigChange = onConfigChange,
+            )
+
             is WindowPresentationOutputConfig -> WindowOutputEditor(
                 config = config,
                 onConfigChange = onConfigChange,
             )
+
             is FullscreenPresentationOutputConfig -> FullscreenOutputEditor(
                 config = config,
                 onConfigChange = onConfigChange,

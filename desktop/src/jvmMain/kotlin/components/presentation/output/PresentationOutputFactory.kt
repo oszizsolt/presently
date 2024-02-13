@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import components.presentation.output.window.FullscreenOutput
+import components.presentation.output.window.NDIOutput
 import components.presentation.output.window.WindowOutput
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.presently.service.engine.presentationoutput.output.FullscreenPresentationOutputConfig
@@ -20,12 +21,17 @@ import io.presently.service.engine.presentationoutput.output.WindowPresentationO
 @Composable
 fun PresentationOutputFactory(
     config: PresentationOutputConfig,
+    hash: String,
     content: @Composable () -> Unit,
 ) {
 
     when (config) {
         is NDIPresentationOutputConfig -> {
-            TODO()
+            NDIOutput(
+                hash = hash,
+                config = config,
+                content = content,
+            )
         }
 
         is WindowPresentationOutputConfig -> WindowOutput(
