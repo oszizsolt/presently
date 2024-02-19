@@ -5,11 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.onClick
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import components.panel.PanelItem
 import components.panel.PanelLayout
 import components.presentation.editor.PresentationEditorEntry
@@ -47,7 +49,7 @@ fun ConfigEditorScreen() {
     // - fix focusing window bug
     // - add logging later
 
-    var selectedConfig by remember { mutableStateOf<Config?>(null) }
+    var selectedConfigName by remember { mutableStateOf<String?>(null) }
 
     PanelLayout(
         leftPanels = listOf(
@@ -57,59 +59,69 @@ fun ConfigEditorScreen() {
             ) {
                 Column {
                     configs.forEach { config ->
-                        Label(
-                            config.name,
-                            modifier = Modifier
-                                .height(32.dp)
-                                .fillMaxWidth()
-                                .background(
-                                    if (config == selectedConfig && config.name == currentConfig?.name) {
-                                        Color.Cyan
-                                    } else if (config == selectedConfig) {
-                                        Color.Blue
-                                    } else if (config.name == currentConfig?.name) {
-                                        Color.Green
-                                    } else {
-                                        Color.Transparent
+                        key(config.name) {
+                            Label(
+                                config.name,
+                                modifier = Modifier
+                                    .height(32.dp)
+                                    .fillMaxWidth()
+                                    .background(
+                                        if (config.name == selectedConfigName && config.name == currentConfig?.name) {
+                                            Color.Cyan
+                                        } else if (config.name == selectedConfigName) {
+                                            Color.Blue
+                                        } else if (config.name == currentConfig?.name) {
+                                            Color.Green
+                                        } else {
+                                            Color.Transparent
+                                        }
+                                    )
+                                    .onClick {
+                                        selectedConfigName = config.name
                                     }
-                                )
-                                .onClick {
-                                    selectedConfig = config
-                                }
-                        )
+                            )
+                        }
                     }
                 }
             }
         ),
         rightPanels = listOf()
     ) {
-        selectedConfig?.let { selectedConfig ->
+        selectedConfigName?.let { selectedConfigName ->
             Column {
-                Label(selectedConfig.name)
+                Label(
+                    text = selectedConfigName,
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 16.dp),
+                )
 
-                selectedConfig.outputs.forEach { output ->
-                    PresentationEditorEntry(
-                        config = output,
-                        onSave = { newOutput ->
-                            configService.put(
-                                config = selectedConfig.copy(
-                                    outputs = selectedConfig.outputs.map {
-                                        if (it == output) {
-                                            newOutput
-                                        } else {
-                                            it
+                val selectedConfig = configs.find { it.name == selectedConfigName }
+
+                selectedConfig?.outputs?.forEach { output ->
+                    key(output.name) {
+                        PresentationEditorEntry(
+                            config = output,
+                            onSave = { newOutput ->
+                                configService.put(
+                                    config = selectedConfig.copy(
+                                        outputs = selectedConfig.outputs.map {
+                                            if (it == output) {
+                                                newOutput
+                                            } else {
+                                                it
+                                            }
                                         }
-                                    }
+                                    )
                                 )
-                            )
-                        }
-                    )
+                            }
+                        )
+                    }
                 }
             }
         }
-
-
-
 
 
     }

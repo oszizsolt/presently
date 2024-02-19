@@ -24,36 +24,22 @@ import io.presently.service.engine.presentationoutput.slide.StageViewSongPresent
 @Composable
 fun PresentationSlideEditorFactory(
     config: PresentationSlideConfig,
-    onConfigChange: (PresentationSlideConfig) -> Unit,
+    onConfigChange: suspend (PresentationSlideConfig) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 24.dp)
-            .padding(vertical = 24.dp)
-    ) {
-        Label(
-            text = "${config.title} settings",
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Bold,
+    when (config) {
+        is SongPresentationSlideConfig -> SongSlideEditor(
+            config = config,
+            onConfigChange = onConfigChange,
         )
 
-        Box(Modifier.height(12.dp))
+        is BiblePresentationSlideConfig -> BibleSlideEditor(
+            config = config,
+            onConfigChange = onConfigChange,
+        )
 
-        when (config) {
-            is SongPresentationSlideConfig -> SongSlideEditor(
-                config = config,
-                onConfigChange = onConfigChange,
-            )
-
-            is BiblePresentationSlideConfig -> BibleSlideEditor(
-                config = config,
-                onConfigChange = onConfigChange,
-            )
-
-            is StageViewSongPresentationSlideConfig -> StageViewSlideEditor(
-                config = config,
-                onConfigChange = onConfigChange,
-            )
-        }
+        is StageViewSongPresentationSlideConfig -> StageViewSlideEditor(
+            config = config,
+            onConfigChange = onConfigChange,
+        )
     }
 }

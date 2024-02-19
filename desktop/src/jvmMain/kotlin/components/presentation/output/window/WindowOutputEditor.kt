@@ -1,19 +1,10 @@
 package components.presentation.output.window
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.state.ToggleableState
-import androidx.compose.ui.unit.dp
-import components.presentation.editor.EnumKeyValueEditorValueType
-import components.presentation.editor.IntKeyValueEditorValueType
-import components.presentation.editor.KeyValueEditor
-import components.presentation.editor.StringKeyValueEditorValueType
-import io.kanro.compose.jetbrains.expui.control.*
-import io.presently.service.engine.presentationoutput.output.NDIPresentationOutputConfig
+import components.presentation.editor.keyvalueeditor.EnumKeyValueEditorValueType
+import components.presentation.editor.keyvalueeditor.IntKeyValueEditorValueType
+import components.presentation.editor.keyvalueeditor.KeyValueEditor
 import io.presently.service.engine.presentationoutput.output.WindowPresentationOutputConfig
-import java.awt.GraphicsEnvironment
 
 @Composable
 fun WindowOutputEditor(
@@ -21,6 +12,7 @@ fun WindowOutputEditor(
     onConfigChange: suspend (WindowPresentationOutputConfig) -> Unit
 ) {
     KeyValueEditor(
+        title = "${config.title} Settings",
         config = mapOf(
             "Width" to IntKeyValueEditorValueType(
                 canBeNull = false,

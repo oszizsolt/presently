@@ -23,46 +23,22 @@ import io.presently.service.engine.presentationoutput.output.WindowPresentationO
 @Composable
 fun PresentationOutputEditorFactory(
     config: PresentationOutputConfig,
-    onConfigChange: (PresentationOutputConfig) -> Unit,
+    onConfigChange: suspend (PresentationOutputConfig) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 24.dp)
-            .padding(vertical = 24.dp)
-    ) {
-        Label(
-            text = "${config.title} settings",
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Bold,
+    when (config) {
+        is NDIPresentationOutputConfig -> NDIOutputEditor(
+            config = config,
+            onConfigChange = onConfigChange,
         )
 
-        Box(Modifier.height(12.dp))
+        is WindowPresentationOutputConfig -> WindowOutputEditor(
+            config = config,
+            onConfigChange = onConfigChange,
+        )
 
-        when (config) {
-            is NDIPresentationOutputConfig -> NDIOutputEditor(
-                config = config,
-                onConfigChange = onConfigChange,
-            )
-
-            is WindowPresentationOutputConfig -> WindowOutputEditor(
-                config = config,
-                onConfigChange = onConfigChange,
-            )
-
-            is FullscreenPresentationOutputConfig -> FullscreenOutputEditor(
-                config = config,
-                onConfigChange = onConfigChange,
-            )
-        }
-
-        // TODO add save button
-
-        // TODO add error handling
-
-//        Button({
-//            onConfigChange(it)
-//        }) {
-//            Label("save")
-//        }
+        is FullscreenPresentationOutputConfig -> FullscreenOutputEditor(
+            config = config,
+            onConfigChange = onConfigChange,
+        )
     }
 }

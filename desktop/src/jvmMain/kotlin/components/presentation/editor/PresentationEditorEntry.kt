@@ -16,6 +16,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindow
 import androidx.compose.ui.window.Window
 import common.preview.PreviewContainer
+import components.presentation.editor.dialog.PresentationOutputEditorDialogButton
+import components.presentation.editor.dialog.PresentationOutputTypeChangerDialogButton
+import components.presentation.editor.dialog.PresentationSlideEditorDialogButton
+import components.presentation.editor.dialog.PresentationSlideTypeChangerDialogButton
 import components.presentation.output.PresentationOutputEditorFactory
 import components.presentation.slide.PresentationSlideEditorFactory
 import components.presentation.slide.PresentationSlideFactory
@@ -35,75 +39,6 @@ fun PresentationEditorEntry(
     config: OutputConfig,
     onSave: suspend (config: OutputConfig) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-
-    var isOutputEditorTurnedOn by remember { mutableStateOf(false) }
-    var isSlideEditorTurnedOn by remember { mutableStateOf(false) }
-
-    if (isOutputEditorTurnedOn) {
-        DialogWindow(
-            visible = isOutputEditorTurnedOn,
-            title = "Output Settings",
-            onCloseRequest = {
-                isOutputEditorTurnedOn = false
-            }
-        ) {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(DarkTheme.NormalAreaColors.startBackground)
-            ) {
-                PresentationOutputEditorFactory(
-                    config = config.outputConfig,
-                    onConfigChange = { presentationOutputConfig ->
-                        scope.launch {
-                            onSave(
-                                config.copy(
-                                    outputConfig = presentationOutputConfig,
-                                )
-                            )
-
-                            isOutputEditorTurnedOn = false
-                        }
-                    },
-                )
-            }
-
-        }
-    }
-
-    if (isSlideEditorTurnedOn) {
-        DialogWindow(
-            visible = isSlideEditorTurnedOn,
-            title = "Slide Settings",
-            onCloseRequest = {
-                isSlideEditorTurnedOn = false
-            }
-        ) {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(DarkTheme.NormalAreaColors.startBackground)
-            ) {
-                PresentationSlideEditorFactory(
-                    config = config.slideConfig,
-                    onConfigChange = { presentationSlideConfig ->
-                        scope.launch {
-                            onSave(
-                                config.copy(
-                                    slideConfig = presentationSlideConfig,
-                                )
-                            )
-
-                            isSlideEditorTurnedOn = false
-                        }
-                    },
-                )
-
-            }
-        }
-    }
-
     Column(
         Modifier
             .fillMaxWidth()
@@ -129,19 +64,20 @@ fun PresentationEditorEntry(
                 // TODO icon here
 
                 Label(
+                    modifier = Modifier.padding(bottom = 6.dp),
                     text = config.slideConfig.title,
                 )
 
                 Row {
-                    PrimaryButton(onClick = {}) {
-                        Label("Change Type")
-                    }
+                    PresentationSlideTypeChangerDialogButton(
+                        config = config,
+                        onSave = onSave,
+                    )
 
-                    PrimaryButton(onClick = {
-                        isSlideEditorTurnedOn = true
-                    }) {
-                        Label("Edit parameters")
-                    }
+                    PresentationSlideEditorDialogButton(
+                        config = config,
+                        onSave = onSave
+                    )
                 }
             }
 
@@ -149,7 +85,7 @@ fun PresentationEditorEntry(
                 Modifier
                     .height(40.dp)
                     .width(1.dp)
-                    .background(Color.Black)
+                    .background(DarkTheme.NormalAreaColors.startBorderColor)
             )
 
             Column(
@@ -160,19 +96,20 @@ fun PresentationEditorEntry(
                 // TODO icon here
 
                 Label(
+                    modifier = Modifier.padding(bottom = 6.dp),
                     text = config.outputConfig.title,
                 )
 
                 Row {
-                    PrimaryButton(onClick = {}) {
-                        Label("Change Type")
-                    }
+                    PresentationOutputTypeChangerDialogButton(
+                        config = config,
+                        onSave = onSave,
+                    )
 
-                    PrimaryButton(onClick = {
-                        isOutputEditorTurnedOn = true
-                    }) {
-                        Label("Edit parameters")
-                    }
+                    PresentationOutputEditorDialogButton(
+                        config = config,
+                        onSave = onSave
+                    )
                 }
             }
         }

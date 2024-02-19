@@ -1,18 +1,10 @@
 package components.presentation.output.window
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import components.presentation.editor.IntKeyValueEditorValueType
-import components.presentation.editor.KeyValueEditor
-import components.presentation.editor.KeyValueEditorValueType
-import components.presentation.editor.StringKeyValueEditorValueType
-import io.kanro.compose.jetbrains.expui.control.*
-import io.presently.service.engine.presentationoutput.output.FullscreenPresentationOutputConfig
+import components.presentation.editor.keyvalueeditor.IntKeyValueEditorValueType
+import components.presentation.editor.keyvalueeditor.KeyValueEditor
+import components.presentation.editor.keyvalueeditor.StringKeyValueEditorValueType
 import io.presently.service.engine.presentationoutput.output.NDIPresentationOutputConfig
-import java.awt.GraphicsEnvironment
 
 @Composable
 fun NDIOutputEditor(
@@ -20,6 +12,7 @@ fun NDIOutputEditor(
     onConfigChange: suspend (NDIPresentationOutputConfig) -> Unit
 ) {
     KeyValueEditor(
+        title = "${config.title} Settings",
         config = mapOf(
             "Name" to StringKeyValueEditorValueType(
                 canBeBlank = false,
