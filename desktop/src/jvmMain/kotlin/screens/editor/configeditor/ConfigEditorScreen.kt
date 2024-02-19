@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import components.panel.PanelItem
 import components.panel.PanelLayout
+import components.presentation.editor.PresentationEditorEntry
 import components.presentation.output.PresentationOutputEditorFactory
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.kanro.compose.jetbrains.expui.control.PrimaryButton
@@ -28,17 +29,14 @@ fun ConfigEditorScreen() {
     val currentConfig = LocalCurrentConfig.current
 
     val configService = LocalConfigService.current
-    var configs by remember { mutableStateOf(emptyList<Config>()) }
-
-    LaunchedEffect(Unit) {
-        configs = configService.get()
-    }
-
-    val scope = rememberCoroutineScope()
+    val configs by configService.get().collectAsState(initial = emptyList())
 
     // TODO:
     // - selectedConfig         <- done?
-    // - config editors for every config type + factory         <- doing now
+    // - config editors for every config type + factory         <- done
+    // - create (maybe: paralell) task: new and safer editor ui with save button and error handling (popup?)
+    // - config create button
+    // - show empty screen, if the selected output does not belong to the selected config (to avoid confusion) ((or add tab layout))
     // - move config selection to the left side
     // - add current config output list to right side
     // - add current output and slide settings to the center
@@ -50,7 +48,6 @@ fun ConfigEditorScreen() {
     // - add logging later
 
     var selectedConfig by remember { mutableStateOf<Config?>(null) }
-    var selectedOutput by remember { mutableStateOf<OutputConfig?>(null) }
 
     PanelLayout(
         leftPanels = listOf(
@@ -84,64 +81,36 @@ fun ConfigEditorScreen() {
                 }
             }
         ),
-        rightPanels = listOf(
-            PanelItem(
-                iconResource = "icons/bars-solid.svg",
-                panelName = "Configurations",
-            ) {
-                Column {
-                    selectedConfig?.outputs?.forEach { output ->
-                        Label(
-                            output.name,
-                            modifier = Modifier
-                                .height(32.dp)
-                                .fillMaxWidth()
-                                .background(
-                                    if (output == selectedOutput) {
-                                        Color.Blue
-                                    } else {
-                                        Color.Transparent
+        rightPanels = listOf()
+    ) {
+        selectedConfig?.let { selectedConfig ->
+            Column {
+                Label(selectedConfig.name)
+
+                selectedConfig.outputs.forEach { output ->
+                    PresentationEditorEntry(
+                        config = output,
+                        onSave = { newOutput ->
+                            configService.put(
+                                config = selectedConfig.copy(
+                                    outputs = selectedConfig.outputs.map {
+                                        if (it == output) {
+                                            newOutput
+                                        } else {
+                                            it
+                                        }
                                     }
                                 )
-                                .onClick {
-                                    selectedOutput = output
-                                }
-                        )
-                    }
-                }
-            }
-        )
-    ) {
-        // TODO output and slide type selection
-
-        if (selectedOutput?.outputConfig != null) {
-            PresentationOutputEditorFactory(
-                config = selectedOutput?.outputConfig!!,
-                onConfigChange = { newConfig ->
-                    selectedConfig?.let { selectedConfig ->
-                        scope.launch {
-                            configService.put(
-                                selectedConfig.copy(
-                                    outputs = selectedConfig.outputs
-                                        .map {
-                                            if (it == selectedOutput) {
-                                                selectedOutput!!.copy(
-                                                    outputConfig = newConfig,
-                                                )
-                                            } else {
-                                                it
-                                            }
-                                        },
-                                ),
                             )
                         }
-
-                    }
-
+                    )
                 }
-            )
+            }
         }
 
-        Label(selectedOutput?.name ?: "hamham")
+
+
+
+
     }
 }

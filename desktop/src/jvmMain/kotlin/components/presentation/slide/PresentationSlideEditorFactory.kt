@@ -1,4 +1,4 @@
-package components.presentation.output
+package components.presentation.slide
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,20 +10,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import components.presentation.output.window.FullscreenOutputEditor
-import components.presentation.output.window.NDIOutputEditor
-import components.presentation.output.window.WindowOutput
-import components.presentation.output.window.WindowOutputEditor
+import components.presentation.output.window.*
 import io.kanro.compose.jetbrains.expui.control.Label
 import io.presently.service.engine.presentationoutput.output.FullscreenPresentationOutputConfig
 import io.presently.service.engine.presentationoutput.output.NDIPresentationOutputConfig
 import io.presently.service.engine.presentationoutput.output.PresentationOutputConfig
 import io.presently.service.engine.presentationoutput.output.WindowPresentationOutputConfig
+import io.presently.service.engine.presentationoutput.slide.BiblePresentationSlideConfig
+import io.presently.service.engine.presentationoutput.slide.PresentationSlideConfig
+import io.presently.service.engine.presentationoutput.slide.SongPresentationSlideConfig
+import io.presently.service.engine.presentationoutput.slide.StageViewSongPresentationSlideConfig
 
 @Composable
-fun PresentationOutputEditorFactory(
-    config: PresentationOutputConfig,
-    onConfigChange: (PresentationOutputConfig) -> Unit,
+fun PresentationSlideEditorFactory(
+    config: PresentationSlideConfig,
+    onConfigChange: (PresentationSlideConfig) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -39,30 +40,20 @@ fun PresentationOutputEditorFactory(
         Box(Modifier.height(12.dp))
 
         when (config) {
-            is NDIPresentationOutputConfig -> NDIOutputEditor(
+            is SongPresentationSlideConfig -> SongSlideEditor(
                 config = config,
                 onConfigChange = onConfigChange,
             )
 
-            is WindowPresentationOutputConfig -> WindowOutputEditor(
+            is BiblePresentationSlideConfig -> BibleSlideEditor(
                 config = config,
                 onConfigChange = onConfigChange,
             )
 
-            is FullscreenPresentationOutputConfig -> FullscreenOutputEditor(
+            is StageViewSongPresentationSlideConfig -> StageViewSlideEditor(
                 config = config,
                 onConfigChange = onConfigChange,
             )
         }
-
-        // TODO add save button
-
-        // TODO add error handling
-
-//        Button({
-//            onConfigChange(it)
-//        }) {
-//            Label("save")
-//        }
     }
 }

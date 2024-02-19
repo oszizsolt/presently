@@ -1,28 +1,13 @@
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
 import androidx.compose.ui.window.application
-import io.presently.service.bible.*
-import io.presently.service.list.SongList
-import io.presently.service.presentation.bible.BiblePresentationServiceImplementation
-import io.presently.service.presentation.song.SongPresentationServiceImplementation
-import io.presently.service.song.Song
-import io.presently.service.song.SongSlide
-import io.presently.service.song.SongSlideType
-import kotlinx.datetime.Clock
-import screens.controller.biblepresentationcontroller.BiblePresentationControllerWindow
-import screens.controller.biblepresentationcontroller.viewmodel.BiblePresentationModeViewModel
-import screens.controller.biblepresentationcontroller.viewmodel.BibleSlideViewModel
-import screens.controller.songpresentationcontroller.viewmodel.SongControllerViewModel
-import screens.controller.songpresentationcontroller.SongPresentationControllerWindow
-import screens.controller.songpresentationcontroller.viewmodel.SongListControllerViewModel
-import screens.controller.songpresentationcontroller.viewmodel.SongPresentationModeViewModel
-import screens.controller.songpresentationcontroller.viewmodel.SongSlideControllerViewModel
 import screens.main.MainWindow
-import screens.main.MainWindowParts
 
 
 @ExperimentalFoundationApi
 fun main() = application {
-
-    MainWindow()
+    MaterialTheme(colors = darkColors()) {
+        MainWindow()
+    }
 }

@@ -69,15 +69,7 @@ fun ApplicationScope.MainWindow() {
 
                 val configService = LocalConfigService.current
                 var isMenuExpanded by remember { mutableStateOf(false) }
-                var configs by remember { mutableStateOf(emptyList<io.presently.service.config.Config>()) }
-
-                LaunchedEffect(isMenuExpanded) {
-                    if (!isMenuExpanded) {
-                        return@LaunchedEffect
-                    }
-
-                    configs = configService.get()
-                }
+                val configs by configService.get().collectAsState(initial = emptyList())
 
                 DropdownLink(
                     text = currentConfig?.name ?: "No configuration",

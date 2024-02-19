@@ -4,4 +4,6 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-sealed interface PresentationSlideConfig
+sealed interface PresentationSlideConfig {
+    val title: String
+}

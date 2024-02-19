@@ -11,4 +11,6 @@ data class StageViewSongPresentationSlideConfig(
     val fontColor: Long,
     val previewFontColor: Long,
     val backgroundColor: Long,
-) : PresentationSlideConfig
+) : PresentationSlideConfig {
+    override val title = "Stage View"
+}

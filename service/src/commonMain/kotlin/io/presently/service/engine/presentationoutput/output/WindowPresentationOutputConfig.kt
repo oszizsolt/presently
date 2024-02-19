@@ -7,7 +7,9 @@ data class WindowPresentationOutputConfig(
     val width: Int,
     val height: Int,
     val resizable: Boolean,
-) : PresentationOutputConfig
+) : PresentationOutputConfig {
+    override val title = "Windowed"
+}
 
 
 

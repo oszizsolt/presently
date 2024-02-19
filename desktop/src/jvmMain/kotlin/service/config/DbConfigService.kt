@@ -5,6 +5,10 @@ import io.presently.service.config.ConfigService
 import io.presently.service.engine.presentationoutput.OutputConfig
 import io.presently.service.engine.presentationoutput.output.PresentationOutputConfig
 import io.presently.service.engine.presentationoutput.slide.PresentationSlideConfig
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.*
@@ -33,40 +37,45 @@ class DbConfigService : ConfigService {
 
     // Database.connect("jdbc:sqlite:file:test?mode=memory&cache=shared", "org.sqlite.JDBC")
 
-//    private val db = Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
+    //    private val db = Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
     private val db = Database.connect("jdbc:sqlite:$path", "org.sqlite.JDBC")
         .apply {
 //        transactionManager.defaultIsolationLevel = Connection.TRANSACTION_SERIALIZABLE
 
-        transaction(db = this) {
-            SchemaUtils.create(ConfigTable, ConfigOutputTable)
+            transaction(db = this) {
+                SchemaUtils.create(ConfigTable, ConfigOutputTable)
+            }
         }
-    }
 
-    override suspend fun get(): List<Config> {
-        return newSuspendedTransaction(db = db) {
-            val outputsByConfigNames = ConfigOutputTable
-                .selectAll()
-                .groupBy { it[ConfigOutputTable.configName] }
-                .mapValues { (key, rows) ->
-                    rows.map {
-                        OutputConfig(
-                            name = it[ConfigOutputTable.name],
-                            outputConfig = Json.decodeFromString<PresentationOutputConfig>(it[ConfigOutputTable.outputConfigJson]),
-                            slideConfig = Json.decodeFromString<PresentationSlideConfig>(it[ConfigOutputTable.slideConfigJson]),
+    private val lastSave = MutableStateFlow(0)
+
+    override fun get(): Flow<List<Config>> {
+        return lastSave.mapLatest {
+            newSuspendedTransaction(db = db) {
+                val outputsByConfigNames = ConfigOutputTable
+                    .selectAll()
+                    .groupBy { it[ConfigOutputTable.configName] }
+                    .mapValues { (key, rows) ->
+                        rows.map {
+                            OutputConfig(
+                                name = it[ConfigOutputTable.name],
+                                outputConfig = Json.decodeFromString<PresentationOutputConfig>(it[ConfigOutputTable.outputConfigJson]),
+                                slideConfig = Json.decodeFromString<PresentationSlideConfig>(it[ConfigOutputTable.slideConfigJson]),
+                            )
+                        }
+                    }
+
+                ConfigTable.selectAll()
+                    .map {
+                        val name = it[ConfigTable.name]
+
+                        Config(
+                            name = name,
+                            outputs = outputsByConfigNames[name] ?: emptyList()
                         )
                     }
-                }
+            }
 
-            ConfigTable.selectAll()
-                .map {
-                    val name = it[ConfigTable.name]
-
-                    Config(
-                        name = name,
-                        outputs = outputsByConfigNames[name] ?: emptyList()
-                    )
-                }
         }
     }
 
@@ -75,6 +84,8 @@ class DbConfigService : ConfigService {
             ConfigOutputTable.deleteWhere { ConfigOutputTable.configName eq name }
             ConfigTable.deleteWhere { ConfigTable.name eq name }
         }
+
+        lastSave.value += 1
     }
 
     override suspend fun put(config: Config) {
@@ -93,5 +104,7 @@ class DbConfigService : ConfigService {
                 this[ConfigOutputTable.outputConfigJson] = Json.encodeToString(output.outputConfig)
             }
         }
+
+        lastSave.value += 1
     }
 }

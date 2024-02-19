@@ -11,4 +11,6 @@ data class BiblePresentationSlideConfig(
     val verseFontColor: Long,
     val verseFontSize: Int,
     val verseFont: String?,
-) : PresentationSlideConfig
+) : PresentationSlideConfig {
+    override val title = "Bible"
+}

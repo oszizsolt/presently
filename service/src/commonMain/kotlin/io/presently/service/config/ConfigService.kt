@@ -1,6 +1,7 @@
 package io.presently.service.config
 
 import io.presently.service.engine.presentationoutput.OutputConfig
+import kotlinx.coroutines.flow.Flow
 
 
 data class Config(
@@ -9,7 +10,7 @@ data class Config(
 )
 
 interface ConfigService {
-    suspend fun get(): List<Config>
+    fun get(): Flow<List<Config>>
 
     suspend fun delete(name: String)
 

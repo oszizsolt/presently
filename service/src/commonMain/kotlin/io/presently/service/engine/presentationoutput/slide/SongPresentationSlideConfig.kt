@@ -8,4 +8,6 @@ data class SongPresentationSlideConfig(
     val fontSize: Int,
     val fontColor: Long,
     val backgroundColor: Long,
-) : PresentationSlideConfig
+) : PresentationSlideConfig {
+    override val title = "Song"
+}

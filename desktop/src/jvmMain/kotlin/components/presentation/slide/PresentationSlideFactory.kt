@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import components.presentation.slide.bible.BiblePresentation
 import components.presentation.slide.song.SongPresentation
-import components.presentation.slide.song.StageViewSongPresentation
+import components.presentation.slide.stageviewsong.StageViewSongPresentation
 import io.presently.service.bible.BibleSlide
 import io.presently.service.engine.PresentationMode
 import io.presently.service.engine.Slide

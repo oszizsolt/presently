@@ -5,7 +5,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FullscreenPresentationOutputConfig(
     val displayId: String?,
-) : PresentationOutputConfig
+) : PresentationOutputConfig {
+    override val title = "Fullscreen"
+}
 
 
 

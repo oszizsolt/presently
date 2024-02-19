@@ -12,40 +12,33 @@ import components.presentation.editor.StringKeyValueEditorValueType
 import io.kanro.compose.jetbrains.expui.control.*
 import io.presently.service.engine.presentationoutput.output.FullscreenPresentationOutputConfig
 import io.presently.service.engine.presentationoutput.output.NDIPresentationOutputConfig
+import io.presently.service.engine.presentationoutput.slide.BiblePresentationSlideConfig
+import io.presently.service.engine.presentationoutput.slide.SongPresentationSlideConfig
 import java.awt.GraphicsEnvironment
 
 @Composable
-fun NDIOutputEditor(
-    config: NDIPresentationOutputConfig,
-    onConfigChange: suspend (NDIPresentationOutputConfig) -> Unit
+fun SongSlideEditor(
+    config: SongPresentationSlideConfig,
+    onConfigChange: suspend (SongPresentationSlideConfig) -> Unit
 ) {
     KeyValueEditor(
         config = mapOf(
-            "Name" to StringKeyValueEditorValueType(
-                canBeBlank = false,
-            ),
-            "Width" to IntKeyValueEditorValueType(
-                canBeNull = false,
-                min = 1,
-                max = null,
-            ),
-            "Height" to IntKeyValueEditorValueType(
+            "Font Size" to IntKeyValueEditorValueType(
                 canBeNull = false,
                 min = 1,
                 max = null,
             ),
         ),
         initialValues = mapOf(
-            "Name" to config.name,
-            "Width" to config.width.toString(),
-            "Height" to config.height.toString(),
+            "Font Size" to config.fontSize.toString(),
         ),
         onSave = {
             onConfigChange(
-                NDIPresentationOutputConfig(
-                    name = it["Name"]!!,
-                    width = it["Width"]!!.toInt(),
-                    height = it["Height"]!!.toInt(),
+                SongPresentationSlideConfig(
+                    font = null,
+                    fontSize = it["Font Size"]!!.toInt(),
+                    fontColor = 0xFFFFFFFF,
+                    backgroundColor = 0xFF000000,
                 )
             )
         }

@@ -7,4 +7,6 @@ data class NDIPresentationOutputConfig(
     val name: String,
     val height: Int,
     val width: Int,
-) : PresentationOutputConfig
+) : PresentationOutputConfig {
+    override val title = "NDI"
+}
